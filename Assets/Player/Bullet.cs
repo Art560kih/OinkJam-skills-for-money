@@ -23,7 +23,6 @@ public class Bullet : MonoBehaviour
     
     void Update()
     {
-        
         if (gameObject.CompareTag("Bullet"))
         {
             StartCoroutine(moveBullet());

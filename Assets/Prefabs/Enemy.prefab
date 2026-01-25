@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6972686624028034321}
   - component: {fileID: 3342560858152052375}
   - component: {fileID: 8203286312147687894}
-  - component: {fileID: -6608203431724363855}
+  - component: {fileID: 2362350457703317453}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: EnemyOrig
@@ -160,7 +160,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-6608203431724363855
+--- !u!114 &2362350457703317453
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,16 +169,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 268510590423165864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9e59514e0bd404f930f95f953d1af8, type: 3}
+  m_Script: {fileID: 11500000, guid: ace00fad73fa88d479dc3dd2299ec31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 5642008054995508064, guid: ca42bb910f0d19f4eb13463b7f8bfd68, type: 3}
   moveSpeed: 1.5
-  checkColl: 1
-  spawnPoints: []
-  enemyPrefab: {fileID: 268510590423165864}
-  spawnPoint: 0
-  health: 30
 --- !u!1 &7803055952292028413
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +186,7 @@ GameObject:
   - component: {fileID: 8284472377892516549}
   m_Layer: 0
   m_Name: EnemyAttack
-  m_TagString: Untagged
+  m_TagString: EnemyOrig
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

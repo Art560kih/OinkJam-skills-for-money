@@ -359,7 +359,6 @@ GameObject:
   - component: {fileID: 8534091953195016601}
   - component: {fileID: 5553174814043799939}
   - component: {fileID: 5269601070652681045}
-  - component: {fileID: 6892344201791808230}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -486,7 +485,6 @@ MonoBehaviour:
   isDead: 0
   cloneBulletPrefab: {fileID: 0}
   bulletPrefab: {fileID: 0}
-  target: {fileID: 0}
   mousePos: {x: 0, y: 0, z: 0}
   worldPos: {x: 0, y: 0, z: 0}
   spawnRate: 10
@@ -535,25 +533,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6892344201791808230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642008054995508064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9e59514e0bd404f930f95f953d1af8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 4102685011185740340}
-  moveSpeed: 2
-  checkColl: 0
-  spawnPoints: []
-  enemyPrefab: {fileID: 0}
-  spawnPoint: 0
-  health: 30
 --- !u!1 &6955578370521096426
 GameObject:
   m_ObjectHideFlags: 0

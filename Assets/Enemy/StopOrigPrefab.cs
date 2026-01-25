@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class StopOrigPrefab : MonoBehaviour
 {
     [SerializeField] private bool lockInScene = true;
     
@@ -16,19 +16,17 @@ public class NewBehaviourScript : MonoBehaviour
     
     void LockThisPrefab()
     {
-        MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in scripts)
+
+        MoveEnemy scriptMoveEnemy = GetComponent<MoveEnemy>();
+        if(scriptMoveEnemy)
         {
-            if (script != this)
-            {
-                script.enabled = false;
-            }
+            scriptMoveEnemy.enabled = false;
         }
         
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.simulated = false;
+            rb.simulated = true;
             rb.isKinematic = true;
             rb.velocity = Vector2.zero;
         }
@@ -45,8 +43,6 @@ public class NewBehaviourScript : MonoBehaviour
         transform.position = new Vector3(1000, 1000, 0);
         
         gameObject.SetActive(false);
-        
-        Debug.Log($"Prefab {name} locked and hidden");
     }
     
     

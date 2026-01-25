@@ -27,8 +27,7 @@ public class PlayerLogic : MonoBehaviour
     
     public GameObject cloneBulletPrefab;
     public GameObject bulletPrefab;
-
-    public GameObject target;
+    
 
     public Vector3 mousePos;
     public Vector3 worldPos;
