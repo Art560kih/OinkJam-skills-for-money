@@ -51,8 +51,6 @@ public class MovingEnemy : MonoBehaviour
         // Используем Transform для простого движения
         transform.Translate(direction * moveSpeed * Time.deltaTime);
         
-        // ИЛИ используем Rigidbody2D для физического движения
-        // if (rb != null) rb.velocity = direction * moveSpeed;
         
         // Поворот спрайта в сторону движения
         if (direction.x != 0 && spriteRenderer != null)

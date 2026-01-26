@@ -6,7 +6,7 @@ public class EnemySpawn : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private int maxEnemies = 10;
     
     private List<GameObject> spawnedEnemies = new List<GameObject>();
@@ -64,6 +64,7 @@ public class EnemySpawn : MonoBehaviour
         {
             rb.simulated = true;
             rb.isKinematic = true;
+            rb.useFullKinematicContacts = true;
         }
 
         Collider2D[] colliders = clone.GetComponents<Collider2D>();

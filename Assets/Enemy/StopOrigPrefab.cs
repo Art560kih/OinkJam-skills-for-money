@@ -17,7 +17,7 @@ public class StopOrigPrefab : MonoBehaviour
     void LockThisPrefab()
     {
 
-        MoveEnemy scriptMoveEnemy = GetComponent<MoveEnemy>();
+        MovingEnemy scriptMoveEnemy = GetComponent<MovingEnemy>();
         if(scriptMoveEnemy)
         {
             scriptMoveEnemy.enabled = false;

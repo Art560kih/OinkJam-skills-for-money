@@ -31,6 +31,12 @@ public class PlayerLogic : MonoBehaviour
 
     public Vector3 mousePos;
     public Vector3 worldPos;
+
+    private float minMovingSpeed = 0.1f;
+    private bool isMoving = false;
+    
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
     
     [SerializeField] private float spawnRate = 10f;
     
@@ -39,6 +45,8 @@ public class PlayerLogic : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();  
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     
     private void Update()
@@ -49,6 +57,7 @@ public class PlayerLogic : MonoBehaviour
             float vertical = Input.GetAxisRaw("Vertical");
 
             moveInput = new Vector2(horizontal, vertical);
+            
 
             if (moveInput.magnitude > 1f)
             {
@@ -64,6 +73,8 @@ public class PlayerLogic : MonoBehaviour
                 }
 
             }
+            
+            animator.SetBool("isMoving", isMoving);
 
         }
     }
@@ -75,6 +86,9 @@ public class PlayerLogic : MonoBehaviour
             Vector2 movement = moveInput * moveSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + movement);
         }
+
+        if (Mathf.Abs(moveInput.x) > 0.1f || Mathf.Abs(moveInput.y) > 0.1f) isMoving = true; else isMoving = false;
+        
     }
 
     public void hitOnPlayer(float damageEnemy)
