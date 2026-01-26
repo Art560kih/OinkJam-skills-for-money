@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c422d42f3f446af44b6d97825c0f3b65
+guid: b7bdcf4697e68bb4ba02bc796f9e42c5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -49,7 +49,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 55, y: 15, z: 27, w: 31}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sprite-FrogBoss_0
+      name: Sprite-FireBall_0
       rect:
         serializedVersion: 2
-        x: 55
-        y: 15
-        width: 612
-        height: 648
+        x: 156
+        y: 130
+        width: 672
+        height: 673
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e66099705e82e740a88dee44f36c3a1
-      internalID: 915958169
+      spriteID: 744dc522069cb034195a39dfe13efd3b
+      internalID: 50289736
       vertices: []
       indices: 
       edges: []
@@ -121,14 +121,14 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Sprite-FrogBoss_0: 915958169
+      Sprite-FireBall_0: 50289736
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

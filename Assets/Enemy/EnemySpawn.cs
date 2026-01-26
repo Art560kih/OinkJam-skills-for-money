@@ -10,6 +10,9 @@ public class EnemySpawn : MonoBehaviour
     [SerializeField] private int maxEnemies = 10;
     
     private List<GameObject> spawnedEnemies = new List<GameObject>();
+    
+    public Animation animation;
+    
     private GameObject player;
 
     void Start()
@@ -65,6 +68,11 @@ public class EnemySpawn : MonoBehaviour
             rb.simulated = true;
             rb.isKinematic = true;
             rb.useFullKinematicContacts = true;
+        }
+        Animator animator = clone.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.enabled = true;
         }
 
         Collider2D[] colliders = clone.GetComponents<Collider2D>();

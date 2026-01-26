@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MovingEnemy : MonoBehaviour
@@ -12,8 +13,12 @@ public class MovingEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     
+    private Animator animator;
+    private bool isRunning = true;
+    
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         
@@ -35,12 +40,13 @@ public class MovingEnemy : MonoBehaviour
         if (health <= 0)
         {
             Die();
+            isRunning = false;
             return;
         }
-        
+        animator.SetBool("isRunning", isRunning);
         MoveTowardsTarget();
     }
-    
+
     private void MoveTowardsTarget()
     {
         if (target == null) return;
