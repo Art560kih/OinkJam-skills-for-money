@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 50ed49116490bb547bd83cdb8268ce48
+guid: ac00dacb781f8824e8f146f45f2f7912
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -97,28 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sprite-ColdAndAntimateriaball_0
-      rect:
-        serializedVersion: 2
-        x: 10
-        y: 217
-        width: 104
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5693a04480eea8548a2b639eb2bc8912
-      internalID: 1854000946
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Sprite-ColdAndAntimateriaball_1
+      name: Sprite-ColdAndAntimateriaball 1_0
       rect:
         serializedVersion: 2
         x: 53
@@ -132,8 +111,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58a1c90595c255e429d8e82b2811cd9d
-      internalID: 662630944
+      spriteID: 2611c1514a02dc94c91bd8e99b548b40
+      internalID: -1119135189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite-ColdAndAntimateriaball 1_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 217
+        width: 104
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b4e95eeb55006d4c8b41cda664e692a
+      internalID: 1138361749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite-ColdAndAntimateriaball 1_2
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 190
+        width: 113
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 037949ba647cf1244b67134997ad370d
+      internalID: 139551995
       vertices: []
       indices: 
       edges: []
@@ -149,8 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Sprite-ColdAndAntimateriaball_0: 1854000946
-      Sprite-ColdAndAntimateriaball_1: 662630944
+      Sprite-ColdAndAntimateriaball 1_0: -1119135189
+      Sprite-ColdAndAntimateriaball 1_1: 1138361749
+      Sprite-ColdAndAntimateriaball 1_2: 139551995
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d5ebfcee42f0a4e40904b4b11cfa2713
+guid: 88e054724e3ac3b45a1e4c18c9999b68
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_0
+      name: Sprite-water_0
       rect:
         serializedVersion: 2
         x: 16
-        y: 17
-        width: 248
-        height: 224
+        y: 118
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 44c3b16c22a692e408060a6cc924c030
-      internalID: -1931300134
+      spriteID: d408463dc654c584e9e2ee93be5c383b
+      internalID: -1031961672
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_1
+      name: Sprite-water_1
       rect:
         serializedVersion: 2
-        x: 300
-        y: 13
-        width: 252
-        height: 225
+        x: 80
+        y: 118
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db95646cc5e024b439aa536ebf7c5c0e
-      internalID: -1759234927
+      spriteID: 61a3c4f8024dbfd40955d2f1ea6ccb40
+      internalID: 1751141776
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_2
+      name: Sprite-water_2
       rect:
         serializedVersion: 2
-        x: 585
-        y: 11
-        width: 252
-        height: 219
+        x: 16
+        y: 53
+        width: 32
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b9604da06375af54da2737f7e542989e
-      internalID: -702193850
+      spriteID: c27e02599df4e7d44aea249381c143d4
+      internalID: -1663321255
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_3
+      name: Sprite-water_3
       rect:
         serializedVersion: 2
-        x: 871
-        y: 19
-        width: 256
-        height: 213
+        x: 64
+        y: 54
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 944b9d05c04f2a94baf12fb4c1b564a2
-      internalID: -351335830
+      spriteID: 26671b4b23a82a34687091c5ef85b035
+      internalID: -816620760
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_4
+      name: Sprite-water_4
       rect:
         serializedVersion: 2
-        x: 1157
-        y: 19
-        width: 254
-        height: 213
+        x: 42
+        y: 27
+        width: 9
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,20 +195,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 47029ba07d891314bb101d00f8b41603
-      internalID: 1554535987
+      spriteID: 0e65c979a728bab40a3af59bab13f75e
+      internalID: 910531312
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sprite-Hero-Sheet_5
+      name: Sprite-water_5
       rect:
         serializedVersion: 2
-        x: 1437
-        y: 21
-        width: 255
-        height: 207
+        x: 25
+        y: 27
+        width: 11
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,50 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b0f210e262c7d143a9eb67b9b731c14
-      internalID: -775352874
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Sprite-Hero-Sheet_6
-      rect:
-        serializedVersion: 2
-        x: 1719
-        y: 16
-        width: 254
-        height: 218
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f261838110d5f5740982749099db8936
-      internalID: 691529339
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Sprite-Hero-Sheet_7
-      rect:
-        serializedVersion: 2
-        x: 2005
-        y: 17
-        width: 255
-        height: 225
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: df69a5b0b5cdfcb4789bd67d244b149e
-      internalID: -2116076741
+      spriteID: c57c03433a310ef489ffc4f6de82dcc0
+      internalID: -1243285134
       vertices: []
       indices: 
       edges: []
@@ -275,14 +233,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Sprite-Hero-Sheet_0: -1931300134
-      Sprite-Hero-Sheet_1: -1759234927
-      Sprite-Hero-Sheet_2: -702193850
-      Sprite-Hero-Sheet_3: -351335830
-      Sprite-Hero-Sheet_4: 1554535987
-      Sprite-Hero-Sheet_5: -775352874
-      Sprite-Hero-Sheet_6: 691529339
-      Sprite-Hero-Sheet_7: -2116076741
+      Sprite-water_0: -1031961672
+      Sprite-water_1: 1751141776
+      Sprite-water_2: -1663321255
+      Sprite-water_3: -816620760
+      Sprite-water_4: 910531312
+      Sprite-water_5: -1243285134
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

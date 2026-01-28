@@ -6,7 +6,7 @@ public class EnemySpawn : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private float spawnInterval = 2f;
+    [SerializeField] private float spawnInterval = 1f;
     [SerializeField] private int maxEnemies = 10;
     
     private List<GameObject> spawnedEnemies = new List<GameObject>();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class MovingEnemy : MonoBehaviour
@@ -22,16 +23,14 @@ public class MovingEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         
-        // Ищем игрока если цель не назначена
         if (target == null)
         {
             target = GameObject.FindGameObjectWithTag("Player");
         }
         
-        // Убедимся что Rigidbody2D настроен правильно
         if (rb != null)
         {
-            rb.gravityScale = 0; // Для 2D врагов часто отключают гравитацию
+            rb.gravityScale = 0;
         }
     }
     
@@ -51,14 +50,10 @@ public class MovingEnemy : MonoBehaviour
     {
         if (target == null) return;
         
-        // Движение в сторону цели
         Vector2 direction = (target.transform.position - transform.position).normalized;
         
-        // Используем Transform для простого движения
         transform.Translate(direction * moveSpeed * Time.deltaTime);
         
-        
-        // Поворот спрайта в сторону движения
         if (direction.x != 0 && spriteRenderer != null)
         {
             spriteRenderer.flipX = direction.x > 0;
@@ -68,9 +63,7 @@ public class MovingEnemy : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
-        Debug.Log($"Enemy took {damageAmount} damage. Health: {health}");
         
-        // Эффект получения урона (мигание)
         StartCoroutine(DamageEffect());
         
         if (health <= 0)
@@ -79,7 +72,7 @@ public class MovingEnemy : MonoBehaviour
         }
     }
     
-    private System.Collections.IEnumerator DamageEffect()
+    private IEnumerator DamageEffect()
     {
         if (spriteRenderer != null)
         {
@@ -92,29 +85,24 @@ public class MovingEnemy : MonoBehaviour
     
     private void Die()
     {
-        Debug.Log("Enemy died!");
         
-        // Эффект смерти
         if (spriteRenderer != null)
         {
             spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         }
         
-        // Отключаем коллайдеры
         Collider2D[] colliders = GetComponents<Collider2D>();
         foreach (Collider2D col in colliders)
         {
             col.enabled = false;
         }
         
-        // Отключаем движение
         if (rb != null)
         {
             rb.velocity = Vector2.zero;
             rb.simulated = false;
         }
         
-        // Уничтожаем через 1 секунду
         Destroy(gameObject, 1f);
     }
     
@@ -131,19 +119,19 @@ public class MovingEnemy : MonoBehaviour
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
-                Destroy(collision.gameObject); // Уничтожаем пулю
+                Destroy(collision.gameObject);
             }
         }
         
-        // Урон игроку при столкновении
         if (collision.CompareTag("Player"))
         {
             PlayerLogic player = collision.GetComponent<PlayerLogic>();
             if (player != null)
             {
-                // player.TakeDamage(damage); // Раскомментируйте если есть метод
-                Debug.Log("Player hit by enemy!");
+                Debug.Log("hit player");
             }
         }
     }
+
+  
 }

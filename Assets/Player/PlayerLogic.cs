@@ -36,11 +36,12 @@ public class PlayerLogic : MonoBehaviour
     private bool isMoving = false;
     
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     
     [SerializeField] private float spawnRate = 10f;
     
     private float nextSpawnTime;
+    
     
     private void Awake()
     {
@@ -55,10 +56,9 @@ public class PlayerLogic : MonoBehaviour
         {
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
-
+            
             moveInput = new Vector2(horizontal, vertical);
             
-
             if (moveInput.magnitude > 1f)
             {
                 moveInput.Normalize();
@@ -91,15 +91,6 @@ public class PlayerLogic : MonoBehaviour
         
     }
 
-    public void hitOnPlayer(float damageEnemy)
-    {
-        if (health > 0)
-        {
-            health -= damageEnemy;
-            Debug.Log(health);
-            if (health <= 0) isDead = true;
-        }
-    }
 
     private void Move()
     {
@@ -110,5 +101,33 @@ public class PlayerLogic : MonoBehaviour
         
         bulletsQueue.Enqueue(cloneBulletPrefab);
     
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("EnemyOrig"))
+        {
+            StartCoroutine(GetDamageEffect());
+        }
+    }
+
+    private IEnumerator GetDamageEffect()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriteRenderer.color = Color.white;
+        
+        yield return new WaitForSeconds(0.2f);
+        
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriteRenderer.color = Color.white;
+        
+        yield return new WaitForSeconds(0.2f);
+        
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriteRenderer.color = Color.white;
+        
     }
 }
