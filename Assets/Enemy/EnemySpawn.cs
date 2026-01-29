@@ -37,7 +37,6 @@ public class EnemySpawn : MonoBehaviour
                 SpawnEnemy();
             }
             
-            // Удаляем уничтоженных врагов из списка
             spawnedEnemies.RemoveAll(enemy => enemy == null);
             
             yield return new WaitForSeconds(spawnInterval);
@@ -94,19 +93,14 @@ public class EnemySpawn : MonoBehaviour
     
     private void SpawnEnemy()
     {
-        // Выбираем случайную точку спавна
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Transform spawnPoint = spawnPoints[randomIndex];
         
-        // Создаем врага
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-        
         
         spawnedEnemies.Add(enemy);
         
         ActivateClone(enemy);
-        
-        Debug.Log($"Spawned enemy at {spawnPoint.position}");
     }
 }
 

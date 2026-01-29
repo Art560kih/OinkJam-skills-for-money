@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = System.Random;
 
 public class MovingEnemy : MonoBehaviour
 {
     [Header("Настройки")]
     [SerializeField] private float health = 30f;
     [SerializeField] private float moveSpeed = 1.5f;
-    [SerializeField] private float damage = 10f;
+    public float damage = 10f;
     
     [Header("Ссылки")]
     private GameObject target;
@@ -16,12 +18,24 @@ public class MovingEnemy : MonoBehaviour
     
     private Animator animator;
     private bool isRunning = true;
+
+    private float attackRange = 2f;
+    private bool canAttack = true;
+    private float cooldown = 1f;
+
+    private PlayerLogic playerLogic;
+
+    private ManegementHpBar hpbar;
+    
+    public Transform player;
     
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        playerLogic = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLogic>();
+        hpbar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
         
         if (target == null)
         {
@@ -44,6 +58,14 @@ public class MovingEnemy : MonoBehaviour
         }
         animator.SetBool("isRunning", isRunning);
         MoveTowardsTarget();
+
+        if(target == null) return;
+        
+        float distance = Vector3.Distance(transform.position, player.position);
+        if (distance <= attackRange && canAttack)
+        {
+            Attack();
+        }
     }
 
     private void MoveTowardsTarget()
@@ -122,15 +144,29 @@ public class MovingEnemy : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
-        
-        if (collision.CompareTag("Player"))
+    }
+
+    private void Attack()
+    {
+        if (playerLogic.health > 0)
         {
-            PlayerLogic player = collision.GetComponent<PlayerLogic>();
-            if (player != null)
-            {
-                Debug.Log("hit player");
-            }
+            playerLogic.TakeDamage -= damage;
+            
+            hpbar.CurrentHp -= damage;
+            
+            Debug.Log(playerLogic.health);
+            canAttack = false;
+            Invoke(nameof(CooldownAttack), cooldown);
         }
+        else
+        {
+            playerLogic.isDead = true;
+        }
+    }
+
+    void CooldownAttack()
+    {
+        canAttack = true;
     }
 
   

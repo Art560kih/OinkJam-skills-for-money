@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerLogic : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] public float bulletSpeed = 5f;
+    
+    public GameObject target;
+    
+    public float health = 100f;
     
     private Vector2 moveInput;
     
@@ -18,8 +23,6 @@ public class PlayerLogic : MonoBehaviour
     public Collider2D coll;
     
     public Camera mainCamera;
-
-    public float health = 100f;
     
     public bool isDead = false;
     
@@ -41,6 +44,7 @@ public class PlayerLogic : MonoBehaviour
     [SerializeField] private float spawnRate = 10f;
     
     private float nextSpawnTime;
+    public GameObject panel;
     
     
     private void Awake()
@@ -48,10 +52,27 @@ public class PlayerLogic : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();  
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        panel.SetActive(false);
     }
     
     private void Update()
     {
+        if (isDead)
+        {
+            Time.timeScale = 0;
+            panel.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                health = 100f;
+                panel.SetActive(false);
+                SceneManager.LoadScene("SampleScene");
+                Time.timeScale = 1;
+            }
+        }
+        if(!isDead) Time.timeScale = 1;
+  
+        
         if (!isDead)
         {
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -75,6 +96,15 @@ public class PlayerLogic : MonoBehaviour
             }
             
             animator.SetBool("isMoving", isMoving);
+            
+            // if (target == null) return;
+            //
+            // Vector2 direction = (target.transform.position - transform.position).normalized;
+            //
+            // if (direction.x != 0 && spriteRenderer != null)
+            // {
+            //     spriteRenderer.flipX = direction.x > 0;
+            // }
 
         }
     }
@@ -122,12 +152,15 @@ public class PlayerLogic : MonoBehaviour
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.2f);
         spriteRenderer.color = Color.white;
-        
-        yield return new WaitForSeconds(0.2f);
-        
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
-        spriteRenderer.color = Color.white;
+    }
+    public float TakeDamage
+    {
+        get => health;
+        set
+        {
+            health = value;
+        }
         
     }
+    
 }

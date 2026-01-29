@@ -9,6 +9,8 @@ TagManager:
   - Bullet
   - PointsSpawnEnemies
   - EnemyOrig
+  - borders
+  - Slider
   layers:
   - Default
   - TransparentFX
