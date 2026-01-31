@@ -96,15 +96,6 @@ public class PlayerLogic : MonoBehaviour
             }
             
             animator.SetBool("isMoving", isMoving);
-            
-            // if (target == null) return;
-            //
-            // Vector2 direction = (target.transform.position - transform.position).normalized;
-            //
-            // if (direction.x != 0 && spriteRenderer != null)
-            // {
-            //     spriteRenderer.flipX = direction.x > 0;
-            // }
 
         }
     }

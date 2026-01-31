@@ -11,6 +11,8 @@ TagManager:
   - EnemyOrig
   - borders
   - Slider
+  - Xp
+  - XpBar
   layers:
   - Default
   - TransparentFX

@@ -22,12 +22,21 @@ public class MovingEnemy : MonoBehaviour
     private float attackRange = 2f;
     private bool canAttack = true;
     private float cooldown = 1f;
+    
+    public bool isDead = false;
 
     private PlayerLogic playerLogic;
 
-    private ManegementHpBar hpbar;
+    private ManegementHpBar hpBar;
     
     public Transform player;
+
+    private MenegmentXpBar xpBar;
+    
+    public SpriteRenderer spriteRendererXp;
+    public TMPro.TextMeshProUGUI xpbarText;
+
+    private bool canGetXp = true;
     
     void Start()
     {
@@ -35,7 +44,8 @@ public class MovingEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerLogic = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLogic>();
-        hpbar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
+        hpBar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
+        xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
         
         if (target == null)
         {
@@ -107,7 +117,6 @@ public class MovingEnemy : MonoBehaviour
     
     private void Die()
     {
-        
         if (spriteRenderer != null)
         {
             spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -124,8 +133,22 @@ public class MovingEnemy : MonoBehaviour
             rb.velocity = Vector2.zero;
             rb.simulated = false;
         }
+        isDead = true;
+
+        if (canGetXp)
+        {
+            xpBar.CurrentXp += 1f;
+
+            canGetXp = false;
+            
+            Invoke(nameof(CooldownXp), cooldown);
+        }
+
+        StartCoroutine(CounterXp());
         
         Destroy(gameObject, 1f);
+
+        
     }
     
     public void SetTarget(GameObject newTarget)
@@ -152,7 +175,7 @@ public class MovingEnemy : MonoBehaviour
         {
             playerLogic.TakeDamage -= damage;
             
-            hpbar.CurrentHp -= damage;
+            hpBar.CurrentHp -= damage;
             
             Debug.Log(playerLogic.health);
             canAttack = false;
@@ -167,6 +190,21 @@ public class MovingEnemy : MonoBehaviour
     void CooldownAttack()
     {
         canAttack = true;
+    }
+
+    void CooldownXp()
+    {
+        canGetXp = true;
+    }
+
+    private IEnumerator CounterXp()
+    {
+        spriteRendererXp.enabled = true;
+        xpbarText.enabled = true;
+        yield return new WaitForSeconds(0.5f);
+        
+        spriteRendererXp.enabled = false;
+        xpbarText.enabled = false;
     }
 
   
