@@ -12,15 +12,13 @@ public class PlayerLogic : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] public float bulletSpeed = 5f;
     
-    public GameObject target;
+    private GameObject target;
     
     public float health = 100f;
     
     private Vector2 moveInput;
     
     private Rigidbody2D rb;
-    
-    public Collider2D coll;
     
     public Camera mainCamera;
     
@@ -46,79 +44,116 @@ public class PlayerLogic : MonoBehaviour
     private float nextSpawnTime;
     public GameObject panel;
     
+    private MenegmentXpBar xpBar;
+    
+    public Bullet bullet;
+
+    public string taged = "Bullet";
+    
+    public CardFireBall cardFireBall;
+    public CardColdBall cardColdBall;
+    public CardToxicBall cardToxicBall;
+    
     
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();  
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
+        
+        bullet = GetComponent<Bullet>();
         
         panel.SetActive(false);
     }
     
     private void Update()
     {
-        if (isDead)
+        if (!xpBar.isPaused)
         {
-            Time.timeScale = 0;
-            panel.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.R))
+            if (isDead)
             {
-                health = 100f;
-                panel.SetActive(false);
-                SceneManager.LoadScene("SampleScene");
-                Time.timeScale = 1;
-            }
-        }
-        if(!isDead) Time.timeScale = 1;
-  
-        
-        if (!isDead)
-        {
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-            
-            moveInput = new Vector2(horizontal, vertical);
-            
-            if (moveInput.magnitude > 1f)
-            {
-                moveInput.Normalize();
-            }
-            
-            if (Input.GetMouseButton(0))
-            {
-                if (Time.time >= nextSpawnTime)
+                Time.timeScale = 0;
+                panel.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.R))
                 {
-                    Move();
-                    nextSpawnTime = Time.time + (1f / spawnRate);
+                    health = 100f;
+                    panel.SetActive(false);
+                    SceneManager.LoadScene("SampleScene");
+                    Time.timeScale = 1;
+                }
+            }
+
+            if (!isDead) Time.timeScale = 1;
+
+
+            if (!isDead)
+            {
+                float horizontal = Input.GetAxisRaw("Horizontal");
+                float vertical = Input.GetAxisRaw("Vertical");
+
+                moveInput = new Vector2(horizontal, vertical);
+
+                if (moveInput.magnitude > 1f)
+                {
+                    moveInput.Normalize();
                 }
 
-            }
-            
-            animator.SetBool("isMoving", isMoving);
+                if (Input.GetMouseButton(0))
+                {
+                    if (Time.time >= nextSpawnTime)
+                    {
+                        Move();
+                        nextSpawnTime = Time.time + (1f / spawnRate);
+                    }
+                }
 
+                animator.SetBool("isMoving", isMoving);
+
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        if (!isDead)
+        if (!xpBar.isPaused)
         {
-            Vector2 movement = moveInput * moveSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + movement);
-        }
+            if (!isDead)
+            {
+                Vector2 movement = moveInput * moveSpeed * Time.fixedDeltaTime;
+                rb.MovePosition(rb.position + movement);
+            }
 
-        if (Mathf.Abs(moveInput.x) > 0.1f || Mathf.Abs(moveInput.y) > 0.1f) isMoving = true; else isMoving = false;
-        
+            if (Mathf.Abs(moveInput.x) > 0.1f || Mathf.Abs(moveInput.y) > 0.1f) isMoving = true;
+            else isMoving = false;
+        }
     }
 
 
     private void Move()
     {
+
+        if (cardToxicBall != null && cardToxicBall.isToxicball && !cardColdBall.isColdBall && !cardFireBall.isFireBall)
+        {
+            // gameObject.tag = "BulletToxicBall";
+            taged = "BulletToxicBall";
+        }
+        
+        if (cardColdBall != null && cardColdBall.isColdBall && !cardFireBall.isFireBall &&  !cardToxicBall.isToxicball)
+        {
+            // gameObject.tag = "BulletColdBall";
+            taged = "BulletColdBall";
+        }
+        
+        if (cardFireBall != null && cardFireBall.isFireBall && !cardToxicBall.isToxicball && !cardColdBall.isColdBall)
+        {
+            // gameObject.tag = "BulletFireBall";
+            taged = "BulletFireBall";
+        }
+        
         cloneBulletPrefab = Instantiate(bulletPrefab, rb.position, Quaternion.identity);
-    
-        cloneBulletPrefab.tag = "Bullet";
-        cloneBulletPrefab.name = "Bullet";
+        
+        cloneBulletPrefab.tag = taged;
         
         bulletsQueue.Enqueue(cloneBulletPrefab);
     
@@ -126,7 +161,7 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnemyOrig"))
+        if (other.CompareTag("Enemy"))
         {
             StartCoroutine(GetDamageEffect());
         }

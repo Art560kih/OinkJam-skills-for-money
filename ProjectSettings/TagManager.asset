@@ -13,6 +13,14 @@ TagManager:
   - Slider
   - Xp
   - XpBar
+  - BulletFireBall
+  - BulletAntiMateria
+  - BulletToxicBall
+  - BulletColdBall
+  - CardFireBall
+  - CardAntiMateria
+  - CardColdBall
+  - CardToxicBall
   layers:
   - Default
   - TransparentFX

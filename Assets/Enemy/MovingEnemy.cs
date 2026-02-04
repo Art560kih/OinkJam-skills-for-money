@@ -7,19 +7,19 @@ using Random = System.Random;
 public class MovingEnemy : MonoBehaviour
 {
     [Header("Настройки")]
-    [SerializeField] private float health = 30f;
-    [SerializeField] private float moveSpeed = 1.5f;
+    public float health = 30f;
+    public float moveSpeed = 3f;
     public float damage = 10f;
     
     [Header("Ссылки")]
-    private GameObject target;
+    public GameObject target;
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     
     private Animator animator;
     private bool isRunning = true;
 
-    private float attackRange = 2f;
+    private float attackRange = 1f;
     private bool canAttack = true;
     private float cooldown = 1f;
     
@@ -35,6 +35,10 @@ public class MovingEnemy : MonoBehaviour
     
     public SpriteRenderer spriteRendererXp;
     public TMPro.TextMeshProUGUI xpbarText;
+    
+    public CardFireBall cardFireBall;
+    public CardColdBall cardColdBall;
+    public CardToxicBall cardToxicBall;
 
     private bool canGetXp = true;
     
@@ -43,7 +47,9 @@ public class MovingEnemy : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
         playerLogic = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLogic>();
+        
         hpBar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
         
@@ -66,29 +72,34 @@ public class MovingEnemy : MonoBehaviour
             isRunning = false;
             return;
         }
+
         animator.SetBool("isRunning", isRunning);
         MoveTowardsTarget();
 
-        if(target == null) return;
-        
+        if (target == null) return;
+
         float distance = Vector3.Distance(transform.position, player.position);
         if (distance <= attackRange && canAttack)
         {
             Attack();
         }
+        
     }
 
     private void MoveTowardsTarget()
     {
         if (target == null) return;
-        
-        Vector2 direction = (target.transform.position - transform.position).normalized;
-        
-        transform.Translate(direction * moveSpeed * Time.deltaTime);
-        
-        if (direction.x != 0 && spriteRenderer != null)
+
+        if (!xpBar.isPaused)
         {
-            spriteRenderer.flipX = direction.x > 0;
+            Vector2 direction = (target.transform.position - transform.position).normalized;
+
+            transform.Translate(direction * moveSpeed * Time.deltaTime);
+
+            if (direction.x != 0 && spriteRenderer != null)
+            {
+                spriteRenderer.flipX = direction.x > 0;
+            }
         }
     }
     
@@ -158,6 +169,14 @@ public class MovingEnemy : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Enemy") && cardFireBall.burning)
+        {
+            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            
+            StartCoroutine(cardFireBall.Burning(movingEnemy));
+            StartCoroutine(EffectBurning());
+        }
+        
         if (collision.CompareTag("Bullet"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
@@ -167,6 +186,117 @@ public class MovingEnemy : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+
+        if (collision.CompareTag("BulletFireBall"))
+        {
+            Bullet bulletFireBall = collision.GetComponent<Bullet>();
+            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            
+            if (bulletFireBall != null)
+            {
+                Debug.Log("Burning");
+                
+                TakeDamage(bulletFireBall.damage);
+                
+                StartCoroutine(cardFireBall.Burning(movingEnemy));
+                
+                StartCoroutine(EffectBurning());
+                
+                Destroy(collision.gameObject);
+                
+            }
+        }
+
+        if (collision.CompareTag("BulletAntiMateria"))
+        {
+            Bullet bullet = collision.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                TakeDamage(bullet.damage);
+                Destroy(collision.gameObject);
+            }
+        }
+
+        if (collision.CompareTag("BulletColdBall"))
+        {
+            Bullet bulletColdBall = collision.GetComponent<Bullet>();
+            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            
+            if (bulletColdBall != null)
+            {
+                Debug.Log("Glaciation");
+                
+                TakeDamage(bulletColdBall.damage);
+                
+                StartCoroutine(cardColdBall.Glaciation(movingEnemy));
+                
+                StartCoroutine(EffectGlaciation());
+                
+                Destroy(collision.gameObject);
+                
+            }
+        }
+
+        if (collision.CompareTag("BulletToxicBall"))
+        {
+            Bullet bulletColdBall = collision.GetComponent<Bullet>();
+            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            
+            if (bulletColdBall != null)
+            {
+                Debug.Log("Poisoning");
+                
+                TakeDamage(bulletColdBall.damage);
+                
+                StartCoroutine(cardToxicBall.Poisoning(movingEnemy));
+                
+                StartCoroutine(EffectPoisoning());
+                
+                Destroy(collision.gameObject);
+                
+            }
+        }
+
+    }
+
+    private IEnumerator EffectPoisoning()
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRenderer.color = new  Color(91f/255f, 191f/255f, 24f/255f, 1f);
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = Color.white;
+        
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private IEnumerator EffectGlaciation()
+    {
+        yield return new WaitForSeconds(1f);
+        
+        spriteRenderer.color = Color.blue;
+        yield return new WaitForSeconds(3f);
+        spriteRenderer.color = Color.white;
+        
+        
+    }
+    
+    private IEnumerator EffectBurning()
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRenderer.color = new Color(255f/255f, 129f/255f, 1f/255f, 1f);
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = Color.white;
+        
+            yield return new WaitForSeconds(1f);
+        }
+        
     }
 
     private void Attack()

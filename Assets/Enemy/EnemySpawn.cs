@@ -13,11 +13,14 @@ public class EnemySpawn : MonoBehaviour
     
     public Animation animation;
     
-    private GameObject player;
+    private GameObject player;   
+    private MenegmentXpBar xpBar;                                                                  
+    
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
 
         if (spawnPoints.Length == 0)
         {
@@ -30,16 +33,19 @@ public class EnemySpawn : MonoBehaviour
     
     private IEnumerator SpawnEnemiesRoutine()
     {
-        while (true)
+        if (!xpBar.isPaused)
         {
-            if (spawnedEnemies.Count < maxEnemies)
+            while (true)
             {
-                SpawnEnemy();
+                if (spawnedEnemies.Count < maxEnemies)
+                {
+                    SpawnEnemy();
+                }
+
+                spawnedEnemies.RemoveAll(enemy => enemy == null);
+
+                yield return new WaitForSeconds(spawnInterval);
             }
-            
-            spawnedEnemies.RemoveAll(enemy => enemy == null);
-            
-            yield return new WaitForSeconds(spawnInterval);
         }
     }
     
@@ -90,17 +96,22 @@ public class EnemySpawn : MonoBehaviour
             Destroy(locker);
         }
     }
-    
+
     private void SpawnEnemy()
     {
-        int randomIndex = Random.Range(0, spawnPoints.Length);
-        Transform spawnPoint = spawnPoints[randomIndex];
-        
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-        
-        spawnedEnemies.Add(enemy);
-        
-        ActivateClone(enemy);
+        if (!xpBar.isPaused)
+        {
+            int randomIndex = Random.Range(0, spawnPoints.Length);
+            Transform spawnPoint = spawnPoints[randomIndex];
+
+            GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+
+            enemy.tag = "Enemy";
+            
+            spawnedEnemies.Add(enemy);
+
+            ActivateClone(enemy);
+        }
     }
 }
 

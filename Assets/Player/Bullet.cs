@@ -13,6 +13,8 @@ public class Bullet : MonoBehaviour
     public Camera mainCamera;
     
     private Vector2 direction;
+    
+    public GameObject prefab;
 
     private Vector3 mousePos;
 
@@ -23,16 +25,20 @@ public class Bullet : MonoBehaviour
     
     void Update()
     {
-        if (gameObject.CompareTag("Bullet"))
+        
+        if (gameObject.CompareTag("Bullet") || gameObject.CompareTag("BulletFireBall") || gameObject.CompareTag("BulletColdBall") || gameObject.CompareTag("BulletToxicBall") || gameObject.CompareTag("BulletAntiMateria"))
         {
             StartCoroutine(moveBullet());
         }
     }
+    
 
     private IEnumerator moveBullet()
     {
         transform.position = Vector3.MoveTowards(transform.position, mousePos, bulletSpeed * Time.deltaTime);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         Destroy(gameObject);
     }
 }
+
+
