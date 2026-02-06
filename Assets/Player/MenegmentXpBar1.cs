@@ -10,7 +10,7 @@ public class MenegmentXpBar : MonoBehaviour
 {
     public Slider currentSlider;
     public Image currentXpBar;
-    private PlayerLogic player;
+    public PlayerLogic _player;
     
     public float currentXp = 0f;
     public float minXp = 0f,  maxXp = 5f;
@@ -37,8 +37,16 @@ public class MenegmentXpBar : MonoBehaviour
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
+    public CardPlusAttackSpeed cardPlusAttackSpeed;
+    public CardPlusHp cardPlusHp;
     
-    
+    public ManegementHpBar manegementHpBar;
+
+    public bool isLevelMiniBoss = false;
+
+    public Bullet bullet;
+
+    public GameObject spawnMiniBoss;
     
     private void Cards() 
     {
@@ -76,6 +84,8 @@ public class MenegmentXpBar : MonoBehaviour
         xpbarText.enabled = false;
         
         isPaused = false;
+        
+        spawnMiniBoss.SetActive(false);
     }
     
     public void Continue()
@@ -89,6 +99,36 @@ public class MenegmentXpBar : MonoBehaviour
         Destroy(cloneThirdCard);
     }
 
+    public void ChouceHpBar()
+    {
+        if (cardPlusHp.chouce) cardPlusHp.isPlusHp = true;
+
+        if (cardPlusHp.isPlusHp)
+        {
+            manegementHpBar.maxHp += 10;
+            manegementHpBar.currentHp += 10;
+            
+            Debug.Log(manegementHpBar.currentHp +"?" + manegementHpBar.maxHp);
+        }
+
+
+    }
+
+    public void ChoucePlusAttackSpeed()
+    {
+        if(cardPlusAttackSpeed.chouce) cardPlusAttackSpeed.isAttackSpeed = true;
+        
+          
+        if (cardPlusAttackSpeed.isAttackSpeed)
+        {
+            _player.spawnRate += 1f;
+            cardPlusAttackSpeed.chouce = false;
+            cardPlusAttackSpeed.isAttackSpeed = false;
+       
+        }
+    }
+    
+    
     public void ChouceFireBall()
     {
         if (cardFireBall.chouce)
@@ -98,12 +138,10 @@ public class MenegmentXpBar : MonoBehaviour
             if (cardColdBall != null)
             {
                 cardColdBall.isColdBall = false;
-                // cardColdBall.Chouce = false;
             }
             if (cardToxicBall != null)
             {
                 cardToxicBall.isToxicball = false;
-                // cardToxicBall.Chouce = false;
             }
             
             Debug.Log("ChouceFireBall");
@@ -120,13 +158,11 @@ public class MenegmentXpBar : MonoBehaviour
             if (cardFireBall != null)
             {
                 cardFireBall.isFireBall = false;
-                // cardFireBall.Chouce = false;
             }
 
             if (cardColdBall != null)
             {
                 cardColdBall.isColdBall = false;
-                // cardColdBall.Chouce = false;
             }
             if (cardToxicBall != null) cardToxicBall.isToxicball = true;
             
@@ -142,14 +178,12 @@ public class MenegmentXpBar : MonoBehaviour
             if (cardFireBall != null)
             {
                 cardFireBall.isFireBall = false;
-                // cardFireBall.Chouce = false;
             }
 
             if (cardColdBall != null) cardColdBall.isColdBall = true;
             if (cardToxicBall != null) 
             {
                 cardToxicBall.isToxicball = false;
-                // cardToxicBall.Chouce = false;
             }
             
             Debug.Log("ChouceColdBall");
@@ -212,6 +246,8 @@ public class MenegmentXpBar : MonoBehaviour
            
             currentXpBar.fillAmount = currentXp / 15;
             
+            spawnMiniBoss.SetActive(true);
+            
             if (currentXpBar.fillAmount >= 1f)
             {
                 currentXpBar.fillAmount = 0f;
@@ -221,6 +257,8 @@ public class MenegmentXpBar : MonoBehaviour
                 
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
+                
+        
 
                 Pause();
                 Cards();
@@ -242,6 +280,8 @@ public class MenegmentXpBar : MonoBehaviour
                 
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
+                
+                spawnMiniBoss.SetActive(false);
                 
                 Pause();
                 Cards();
@@ -285,6 +325,8 @@ public class MenegmentXpBar : MonoBehaviour
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
                 
+                spawnMiniBoss.SetActive(true);
+                
                 Pause();
                 Cards();
             }
@@ -305,6 +347,8 @@ public class MenegmentXpBar : MonoBehaviour
                 
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
+                
+                spawnMiniBoss.SetActive(false);
                 
                 Pause();
                 Cards();

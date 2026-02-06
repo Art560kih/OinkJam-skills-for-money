@@ -19,7 +19,6 @@ public class CardColdBall : MonoBehaviour
         cardToxicBall.Chouce = false;
         cardFireBall.Chouce = false;
         
-        Debug.Log("ChouceColdBall");
     }
     
     public bool Chouce

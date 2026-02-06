@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPlusHp : MonoBehaviour
+public class CardPlusAttackSpeed : MonoBehaviour
 {
     public bool chouce = false;
-    public bool isPlusHp = false;
-    
-    public void PlusHp()
+    public bool isAttackSpeed = false;
+
+    public void ChouceAttackSpeed()
     {
         chouce = true;
     }
+    
 }

@@ -29,6 +29,10 @@ public class PlayerLogic : MonoBehaviour
     public GameObject cloneBulletPrefab;
     public GameObject bulletPrefab;
     
+    public GameObject bulletPrefabAntiMateria;
+    public GameObject bulletPrefabFireBall;
+    public GameObject bulletPrefabColdBall;
+    public GameObject bulletPrefabToxicBall;
 
     public Vector3 mousePos;
     public Vector3 worldPos;
@@ -39,14 +43,12 @@ public class PlayerLogic : MonoBehaviour
     private Animator animator;
     public SpriteRenderer spriteRenderer;
     
-    [SerializeField] private float spawnRate = 10f;
+    public float spawnRate = 5f;
     
     private float nextSpawnTime;
     public GameObject panel;
     
     private MenegmentXpBar xpBar;
-    
-    public Bullet bullet;
 
     public string taged = "Bullet";
     
@@ -61,8 +63,6 @@ public class PlayerLogic : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
-        
-        bullet = GetComponent<Bullet>();
         
         panel.SetActive(false);
     }
@@ -135,20 +135,20 @@ public class PlayerLogic : MonoBehaviour
 
         if (cardToxicBall != null && cardToxicBall.isToxicball && !cardColdBall.isColdBall && !cardFireBall.isFireBall)
         {
-            // gameObject.tag = "BulletToxicBall";
             taged = "BulletToxicBall";
+            bulletPrefab = bulletPrefabToxicBall;
         }
         
         if (cardColdBall != null && cardColdBall.isColdBall && !cardFireBall.isFireBall &&  !cardToxicBall.isToxicball)
         {
-            // gameObject.tag = "BulletColdBall";
             taged = "BulletColdBall";
+            bulletPrefab = bulletPrefabColdBall;
         }
         
         if (cardFireBall != null && cardFireBall.isFireBall && !cardToxicBall.isToxicball && !cardColdBall.isColdBall)
         {
-            // gameObject.tag = "BulletFireBall";
             taged = "BulletFireBall";
+            bulletPrefab = bulletPrefabFireBall;
         }
         
         cloneBulletPrefab = Instantiate(bulletPrefab, rb.position, Quaternion.identity);
@@ -161,7 +161,7 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("BulletMiniBoss"))
         {
             StartCoroutine(GetDamageEffect());
         }

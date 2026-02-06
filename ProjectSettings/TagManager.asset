@@ -21,6 +21,16 @@ TagManager:
   - CardAntiMateria
   - CardColdBall
   - CardToxicBall
+  - ColliderForBurning
+  - CardPlusDamage
+  - SpriteFireBall
+  - SpriteColdBall
+  - SpriteToxicBall
+  - SpriteAntiMateria
+  - SpawnPointSpawnMiniBoss
+  - MiniBossOrig
+  - MiniBoss
+  - BulletMiniBoss
   layers:
   - Default
   - TransparentFX

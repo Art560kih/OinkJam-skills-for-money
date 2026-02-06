@@ -26,7 +26,29 @@ public class ManegementHpBar : MonoBehaviour
 
     void Update()
     {
-        currentHpBar.fillAmount = currentHp / 100;
+        switch (maxHp)
+        {
+            case 100:
+                currentHpBar.fillAmount = currentHp / 100;
+                break;
+            case 110:
+                currentHpBar.fillAmount = currentHp / 110;
+                break;
+            case 120:
+                currentHpBar.fillAmount = currentHp / 120;
+                break;
+            case 130:
+                currentHpBar.fillAmount = currentHp / 130;
+                break;
+            case 140:
+                currentHpBar.fillAmount = currentHp / 140;
+                break;
+            case 150:
+                currentHpBar.fillAmount = currentHp / 150;
+                break;
+        }
+   
+        
     }
     
 }
