@@ -46,7 +46,7 @@ public class PlayerLogic : MonoBehaviour
     public float spawnRate = 5f;
     
     private float nextSpawnTime;
-    public GameObject panel;
+    public GameObject panelDie;
     
     private MenegmentXpBar xpBar;
 
@@ -55,6 +55,7 @@ public class PlayerLogic : MonoBehaviour
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
+    public CardAntiMateria cardAntiMateria;
     
     
     private void Awake()
@@ -64,7 +65,7 @@ public class PlayerLogic : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
         
-        panel.SetActive(false);
+        panelDie.SetActive(false);
     }
     
     private void Update()
@@ -74,11 +75,11 @@ public class PlayerLogic : MonoBehaviour
             if (isDead)
             {
                 Time.timeScale = 0;
-                panel.SetActive(true);
+                panelDie.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     health = 100f;
-                    panel.SetActive(false);
+                    panelDie.SetActive(false);
                     SceneManager.LoadScene("SampleScene");
                     Time.timeScale = 1;
                 }
@@ -133,23 +134,31 @@ public class PlayerLogic : MonoBehaviour
     private void Move()
     {
 
-        if (cardToxicBall != null && cardToxicBall.isToxicball && !cardColdBall.isColdBall && !cardFireBall.isFireBall)
+        if (cardToxicBall != null && cardToxicBall.isToxicball && !cardColdBall.isColdBall && !cardFireBall.isFireBall && !cardAntiMateria.isAntiMateria)
         {
             taged = "BulletToxicBall";
             bulletPrefab = bulletPrefabToxicBall;
         }
         
-        if (cardColdBall != null && cardColdBall.isColdBall && !cardFireBall.isFireBall &&  !cardToxicBall.isToxicball)
+        if (cardColdBall != null && cardColdBall.isColdBall && !cardFireBall.isFireBall &&  !cardToxicBall.isToxicball && !cardAntiMateria.isAntiMateria)
         {
             taged = "BulletColdBall";
             bulletPrefab = bulletPrefabColdBall;
         }
         
-        if (cardFireBall != null && cardFireBall.isFireBall && !cardToxicBall.isToxicball && !cardColdBall.isColdBall)
+        if (cardFireBall != null && cardFireBall.isFireBall && !cardAntiMateria.isAntiMateria && !cardToxicBall.isToxicball && !cardColdBall.isColdBall)
         {
             taged = "BulletFireBall";
             bulletPrefab = bulletPrefabFireBall;
         }
+        
+        if (cardAntiMateria != null && cardAntiMateria.isAntiMateria && !cardFireBall.isFireBall && !cardToxicBall.isToxicball && !cardColdBall.isColdBall)
+        {
+            taged = "BulletAntiMateria";
+            bulletPrefab = bulletPrefabAntiMateria;
+        }
+        
+    
         
         cloneBulletPrefab = Instantiate(bulletPrefab, rb.position, Quaternion.identity);
         
@@ -161,7 +170,7 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("BulletMiniBoss"))
+        if (other.CompareTag("Enemy") || other.CompareTag("BulletMiniBoss") || other.CompareTag("BulletBoss"))
         {
             StartCoroutine(GetDamageEffect());
         }

@@ -158,9 +158,9 @@ public class MovingMiniBoss : MonoBehaviour
     {
         if (collision.CompareTag("ColliderForBurning") && cardFireBall.burning)
         {
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
 
-            StartCoroutine(cardFireBall.Burning(movingEnemy));
+            StartCoroutine(cardFireBall.BurningMiniBoss(movingMiniBoss));
             StartCoroutine(EffectBurning());
         }
 
@@ -177,7 +177,7 @@ public class MovingMiniBoss : MonoBehaviour
         if (collision.CompareTag("BulletFireBall"))
         {
             Bullet bulletFireBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
 
             if (bulletFireBall != null)
             {
@@ -185,7 +185,7 @@ public class MovingMiniBoss : MonoBehaviour
 
                 TakeDamage(bulletFireBall.damage);
 
-                StartCoroutine(cardFireBall.Burning(movingEnemy));
+                StartCoroutine(cardFireBall.BurningMiniBoss(movingMiniBoss));
 
                 StartCoroutine(EffectBurning());
 
@@ -207,7 +207,7 @@ public class MovingMiniBoss : MonoBehaviour
         if (collision.CompareTag("BulletColdBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
 
             if (bulletColdBall != null)
             {
@@ -215,7 +215,7 @@ public class MovingMiniBoss : MonoBehaviour
 
                 TakeDamage(bulletColdBall.damage);
 
-                StartCoroutine(cardColdBall.Glaciation(movingEnemy));
+                StartCoroutine(cardColdBall.GlaciationMiniBoss(movingMiniBoss));
 
                 StartCoroutine(EffectGlaciation());
 
@@ -227,7 +227,7 @@ public class MovingMiniBoss : MonoBehaviour
         if (collision.CompareTag("BulletToxicBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
 
             if (bulletColdBall != null)
             {
@@ -235,7 +235,7 @@ public class MovingMiniBoss : MonoBehaviour
 
                 TakeDamage(bulletColdBall.damage);
 
-                StartCoroutine(cardToxicBall.Poisoning(movingEnemy));
+                StartCoroutine(cardToxicBall.PoisoningMiniBoss(movingMiniBoss));
 
                 StartCoroutine(EffectPoisoning());
 

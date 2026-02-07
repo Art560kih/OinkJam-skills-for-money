@@ -12,7 +12,7 @@ public class CardFireBall : MonoBehaviour
     
     public CardToxicBall cardToxicBall;
     public CardColdBall cardColdBall;
-    
+    public CardAntiMateria cardAntiMateria;
     
     public void ChouceFireBall()
     {
@@ -20,6 +20,7 @@ public class CardFireBall : MonoBehaviour
         
         cardToxicBall.Chouce = false;
         cardColdBall.Chouce = false;
+        cardAntiMateria.Chouce = false;
     }
 
     public bool Chouce
@@ -37,6 +38,31 @@ public class CardFireBall : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             _movingEnemy.health -= periodicDamage;
+            burning = false;
+           
+        }
+    }
+    public IEnumerator BurningMiniBoss(MovingMiniBoss _movingMiniBoss)
+    {
+        burning = true;
+        
+        for (int i = 0; i < 3; i++)
+        {
+            yield return new WaitForSeconds(1f);
+            _movingMiniBoss.health -= periodicDamage;
+            burning = false;
+           
+        }
+    }
+    
+    public IEnumerator BurningBoss(MovingBoss _movingBoss)
+    {
+        burning = true;
+        
+        for (int i = 0; i < 3; i++)
+        {
+            yield return new WaitForSeconds(1f);
+            _movingBoss.health -= periodicDamage;
             burning = false;
            
         }

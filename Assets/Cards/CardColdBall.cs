@@ -10,7 +10,7 @@ public class CardColdBall : MonoBehaviour
     
     public CardToxicBall cardToxicBall;
     public CardFireBall cardFireBall;
-    
+    public CardAntiMateria cardAntiMateria;
     
     public void ChouceColdBall()
     {
@@ -18,6 +18,7 @@ public class CardColdBall : MonoBehaviour
         
         cardToxicBall.Chouce = false;
         cardFireBall.Chouce = false;
+        cardAntiMateria.Chouce = false;
         
     }
     
@@ -41,6 +42,38 @@ public class CardColdBall : MonoBehaviour
         
         yield return new WaitForSeconds(3f);
         _movingEnemy.moveSpeed = origSpeed;
+
+    }
+    
+    public IEnumerator GlaciationMiniBoss(MovingMiniBoss _movingMiniBoss)
+    {
+        
+        float origSpeed = _movingMiniBoss.moveSpeed;
+        
+        float newSpeed = _movingMiniBoss.moveSpeed / 2f;
+        
+        yield return new WaitForSeconds(1f);
+        
+        _movingMiniBoss.moveSpeed = newSpeed;
+        
+        yield return new WaitForSeconds(3f);
+        _movingMiniBoss.moveSpeed = origSpeed;
+
+    }
+    
+    public IEnumerator GlaciationBoss(MovingBoss _movingBoss)
+    {
+        
+        float origSpeed = _movingBoss.moveSpeed;
+        
+        float newSpeed = _movingBoss.moveSpeed / 2f;
+        
+        yield return new WaitForSeconds(1f);
+        
+        _movingBoss.moveSpeed = newSpeed;
+        
+        yield return new WaitForSeconds(3f);
+        _movingBoss.moveSpeed = origSpeed;
 
     }
 }

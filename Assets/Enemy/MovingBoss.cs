@@ -1,45 +1,50 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingEnemy : MonoBehaviour
+public class MovingBoss : MonoBehaviour
 {
-    [Header("Настройки")]
-    public float health = 30f;
-    public float moveSpeed = 3f;
-    public float damageEnemy = 10f;
-    
-    [Header("Ссылки")]
     public GameObject target;
     private Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
-    
     private Animator animator;
-    private bool isRunning = true;
-
-    private float attackRange = 1f;
-    private bool canAttack = true;
-    private float cooldown = 1f;
     
-    public bool isDead = false;
-
+    private bool isRunning = true;
+    
     private PlayerLogic playerLogic;
-
     private ManegementHpBar hpBar;
     
-    public Transform player;
-
-    private MenegmentXpBar xpBar;
+    public float health = 500f;
+    public float maxHealth = 500f;
     
-    public SpriteRenderer spriteRendererXp;
-    public TMPro.TextMeshProUGUI xpbarText;
+    public float moveSpeed = 1f;
+    public float damageEnemy = 5f;
     
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
+    
+    public SpriteRenderer spriteRendererXp;
+    public TMPro.TextMeshProUGUI xpbarText;
+    
+    private MenegmentXpBar xpBar;
+    
+    public bool isDead = false;
+    
+    private float cooldown = 1f;
+    
+    public GameObject panelWinning;
+    
+    [SerializeField] private float teleportCooldown = 3f;
+    [SerializeField] private float minTeleportDistance = 3f;
+    [SerializeField] private float maxTeleportDistance = 15f;
 
-    private bool canGetXp = true;
+    [SerializeField] private Transform areaCenter;
+    [SerializeField] private float areaRadius = 10f;
+    private float teleportTimer;
+
+    [SerializeField] private SpriteRenderer shadow;
+    
     
     void Start()
     {
@@ -52,6 +57,8 @@ public class MovingEnemy : MonoBehaviour
         hpBar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
         
+        teleportTimer = 0.1f;
+        
         if (target == null)
         {
             target = GameObject.FindGameObjectWithTag("Player");
@@ -62,47 +69,70 @@ public class MovingEnemy : MonoBehaviour
             rb.gravityScale = 0;
         }
     }
-    
+
     void Update()
     {
-        if (health <= 0)
-        {
-            Die();
-            isRunning = false;
-            return;
-        }
-
-        animator.SetBool("isRunning", isRunning);
-        MoveTowardsTarget();
-
-        if (target == null) return;
-
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance <= attackRange && canAttack)
-        {
-            Attack();
-        }
-        
-    }
-
-    private void MoveTowardsTarget()
-    {
-        if (target == null) return;
-
         if (!xpBar.isPaused)
         {
-            Vector2 direction = (target.transform.position - transform.position).normalized;
-
-            transform.Translate(direction * moveSpeed * Time.deltaTime);
-
-            if (direction.x != 0 && spriteRenderer != null)
+            if (!playerLogic.isDead)
             {
-                spriteRenderer.flipX = direction.x > 0;
+                if (health <= 0)
+                {
+                    Die();
+                    isRunning = false;
+                    Time.timeScale = 0;
+                    panelWinning.SetActive(true);
+                    return;
+                }
+
+                animator.SetBool("isRunning", isRunning);
+                MoveTowardsTarget();
+
+                teleportTimer -= Time.deltaTime;
+
+                if (teleportTimer <= 0)
+                {
+                    Teleportation();
+                    teleportTimer = teleportCooldown;
+                }
+
+
+                if (target == null) return;
             }
         }
     }
-    
-    public void TakeDamage(float damageAmount)
+
+
+    private void Teleportation()
+    {
+        if (health <= maxHealth / 2)
+        {
+            StartCoroutine(EffectTeleportation());
+
+            StartCoroutine(Telep());
+        }
+    }
+
+    private IEnumerator Telep()
+    {
+        yield return new WaitForSeconds(teleportCooldown);
+        
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        float randomDistance = Random.Range(minTeleportDistance, maxTeleportDistance);
+        Vector2 newPosition = (Vector2)transform.position + randomDirection * randomDistance;
+
+        health += 30f;
+            
+        if (areaCenter != null)
+        {
+            newPosition = Vector2.ClampMagnitude(newPosition - (Vector2)areaCenter.position, areaRadius) + (Vector2)areaCenter.position;
+        }
+            
+        transform.position = newPosition;
+    }
+
+
+    private void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
         
@@ -111,6 +141,24 @@ public class MovingEnemy : MonoBehaviour
         if (health <= 0)
         {
             Die();
+        }
+    }
+    
+    private IEnumerator EffectTeleportation()
+    {
+        yield return new WaitForSeconds(1f);
+        
+        moveSpeed = 0;
+        
+        for (int i = 0; i < 5; i++)
+        {
+            shadow.color = Color.blue;
+            yield return new WaitForSeconds(0.1f);
+            shadow.color = new Color(0.7f, 0.7f, 0.7f, 0.1f);
+
+        
+        
+            yield return new WaitForSeconds(1f);
         }
     }
     
@@ -124,6 +172,25 @@ public class MovingEnemy : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
     }
+    
+    private void MoveTowardsTarget()
+    {
+        if (target == null) return;
+
+        if (!xpBar.isPaused)
+        {
+            Vector2 direction = (target.transform.position - transform.position).normalized;
+            
+            transform.Translate(direction * moveSpeed * Time.deltaTime);
+
+            if (direction.x != 0 && spriteRenderer != null)
+            {
+                spriteRenderer.flipX = direction.x < 0;
+            }
+            
+        }
+    }
+    
     
     private void Die()
     {
@@ -144,17 +211,6 @@ public class MovingEnemy : MonoBehaviour
             rb.simulated = false;
         }
         isDead = true;
-
-        if (canGetXp)
-        {
-            xpBar.CurrentXp += 1f;
-
-            canGetXp = false;
-            
-            Invoke(nameof(CooldownXp), cooldown);
-        }
-
-        StartCoroutine(CounterXp());
         
         Destroy(gameObject, 1f);
 
@@ -165,12 +221,12 @@ public class MovingEnemy : MonoBehaviour
     {
         if (collision.CompareTag("ColliderForBurning") && cardFireBall.burning)
         {
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
-            StartCoroutine(cardFireBall.Burning(movingEnemy));
+            MovingBoss movingBoss = GetComponent<MovingBoss>();
+
+            StartCoroutine(cardFireBall.BurningBoss(movingBoss));
             StartCoroutine(EffectBurning());
         }
-        
+
         if (collision.CompareTag("Bullet"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
@@ -184,20 +240,20 @@ public class MovingEnemy : MonoBehaviour
         if (collision.CompareTag("BulletFireBall"))
         {
             Bullet bulletFireBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingBoss movingBoss = GetComponent<MovingBoss>();
+
             if (bulletFireBall != null)
             {
                 Debug.Log("Burning");
-                
+
                 TakeDamage(bulletFireBall.damage);
-                
-                StartCoroutine(cardFireBall.Burning(movingEnemy));
-                
+
+                StartCoroutine(cardFireBall.BurningBoss(movingBoss));
+
                 StartCoroutine(EffectBurning());
-                
+
                 Destroy(collision.gameObject);
-                
+
             }
         }
 
@@ -207,52 +263,52 @@ public class MovingEnemy : MonoBehaviour
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
-                // Destroy(collision.gameObject);
+                Destroy(collision.gameObject);
             }
         }
 
         if (collision.CompareTag("BulletColdBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingBoss movingBoss = GetComponent<MovingBoss>();
+
             if (bulletColdBall != null)
             {
                 Debug.Log("Glaciation");
-                
+
                 TakeDamage(bulletColdBall.damage);
-                
-                StartCoroutine(cardColdBall.Glaciation(movingEnemy));
-                
+
+                StartCoroutine(cardColdBall.GlaciationBoss(movingBoss));
+
                 StartCoroutine(EffectGlaciation());
-                
+
                 Destroy(collision.gameObject);
-                
+
             }
         }
 
         if (collision.CompareTag("BulletToxicBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingBoss movingBoss = GetComponent<MovingBoss>();
+
             if (bulletColdBall != null)
             {
                 Debug.Log("Poisoning");
-                
+
                 TakeDamage(bulletColdBall.damage);
-                
-                StartCoroutine(cardToxicBall.Poisoning(movingEnemy));
-                
+
+                StartCoroutine(cardToxicBall.PoisoningBoss(movingBoss));
+
                 StartCoroutine(EffectPoisoning());
-                
+
                 Destroy(collision.gameObject);
-                
+
             }
         }
-
     }
-
+    
+    
     private IEnumerator EffectPoisoning()
     {
         yield return new WaitForSeconds(1f);
@@ -292,44 +348,4 @@ public class MovingEnemy : MonoBehaviour
         }
         
     }
-
-    private void Attack()
-    {
-        if (playerLogic.health > 0)
-        {
-            playerLogic.TakeDamage -= damageEnemy;
-            
-            hpBar.CurrentHp -= damageEnemy;
-            
-            Debug.Log(playerLogic.health);
-            canAttack = false;
-            Invoke(nameof(CooldownAttack), cooldown);
-        }
-        else
-        {
-            playerLogic.isDead = true;
-        }
-    }
-
-    void CooldownAttack()
-    {
-        canAttack = true;
-    }
-
-    void CooldownXp()
-    {
-        canGetXp = true;
-    }
-
-    private IEnumerator CounterXp()
-    {
-        spriteRendererXp.enabled = true;
-        xpbarText.enabled = true;
-        yield return new WaitForSeconds(0.5f);
-        
-        spriteRendererXp.enabled = false;
-        xpbarText.enabled = false;
-    }
-
-  
 }

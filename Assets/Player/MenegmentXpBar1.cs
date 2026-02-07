@@ -37,6 +37,7 @@ public class MenegmentXpBar : MonoBehaviour
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
+    public CardAntiMateria cardAntiMateria;
     public CardPlusAttackSpeed cardPlusAttackSpeed;
     public CardPlusHp cardPlusHp;
     
@@ -47,6 +48,7 @@ public class MenegmentXpBar : MonoBehaviour
     public Bullet bullet;
 
     public GameObject spawnMiniBoss;
+    public GameObject spawnBoss;
     
     private void Cards() 
     {
@@ -86,6 +88,7 @@ public class MenegmentXpBar : MonoBehaviour
         isPaused = false;
         
         spawnMiniBoss.SetActive(false);
+        // spawnBoss.SetActive(false);
     }
     
     public void Continue()
@@ -99,6 +102,22 @@ public class MenegmentXpBar : MonoBehaviour
         Destroy(cloneThirdCard);
     }
 
+    public void ChouceAntiMateria()
+    {
+        if (cardAntiMateria.chouce)
+        {
+            if (cardFireBall != null) cardFireBall.isFireBall = false;
+
+            if (cardColdBall != null) cardColdBall.isColdBall = false;
+
+            if (cardToxicBall != null) cardAntiMateria.isAntiMateria = true;
+
+            if (cardToxicBall != null) cardToxicBall.isToxicball = false;
+
+            Debug.Log("Chouce AntiMateria");
+        }
+    }
+
     public void ChouceHpBar()
     {
         if (cardPlusHp.chouce) cardPlusHp.isPlusHp = true;
@@ -107,8 +126,6 @@ public class MenegmentXpBar : MonoBehaviour
         {
             manegementHpBar.maxHp += 10;
             manegementHpBar.currentHp += 10;
-            
-            Debug.Log(manegementHpBar.currentHp +"?" + manegementHpBar.maxHp);
         }
 
 
@@ -133,18 +150,14 @@ public class MenegmentXpBar : MonoBehaviour
     {
         if (cardFireBall.chouce)
         {
-                        
+
             if (cardFireBall != null) cardFireBall.isFireBall = true;
-            if (cardColdBall != null)
-            {
-                cardColdBall.isColdBall = false;
-            }
-            if (cardToxicBall != null)
-            {
-                cardToxicBall.isToxicball = false;
-            }
             
-            Debug.Log("ChouceFireBall");
+            if (cardColdBall != null) cardColdBall.isColdBall = false;
+            
+            if(cardToxicBall != null) cardAntiMateria.isAntiMateria = false;
+            
+            if (cardToxicBall != null) cardToxicBall.isToxicball = false;
 
         }
     }
@@ -155,18 +168,13 @@ public class MenegmentXpBar : MonoBehaviour
         if (cardToxicBall.chouce)
         {
 
-            if (cardFireBall != null)
-            {
-                cardFireBall.isFireBall = false;
-            }
-
-            if (cardColdBall != null)
-            {
-                cardColdBall.isColdBall = false;
-            }
-            if (cardToxicBall != null) cardToxicBall.isToxicball = true;
+            if (cardFireBall != null) cardFireBall.isFireBall = false;
             
-            Debug.Log("ChouceToxicBall");
+            if(cardToxicBall != null) cardAntiMateria.isAntiMateria = false;
+
+            if (cardColdBall != null) cardColdBall.isColdBall = false;
+            
+            if (cardToxicBall != null) cardToxicBall.isToxicball = true;
  
         }
     }
@@ -175,18 +183,13 @@ public class MenegmentXpBar : MonoBehaviour
     {
         if (cardColdBall.chouce)
         {
-            if (cardFireBall != null)
-            {
-                cardFireBall.isFireBall = false;
-            }
+            if (cardFireBall != null) cardFireBall.isFireBall = false;
 
             if (cardColdBall != null) cardColdBall.isColdBall = true;
-            if (cardToxicBall != null) 
-            {
-                cardToxicBall.isToxicball = false;
-            }
             
-            Debug.Log("ChouceColdBall");
+            if (cardToxicBall != null) cardToxicBall.isToxicball = false;
+            
+            if(cardToxicBall != null) cardAntiMateria.isAntiMateria = false;
 
         }
     }
@@ -246,8 +249,6 @@ public class MenegmentXpBar : MonoBehaviour
            
             currentXpBar.fillAmount = currentXp / 15;
             
-            spawnMiniBoss.SetActive(true);
-            
             if (currentXpBar.fillAmount >= 1f)
             {
                 currentXpBar.fillAmount = 0f;
@@ -257,8 +258,6 @@ public class MenegmentXpBar : MonoBehaviour
                 
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
-                
-        
 
                 Pause();
                 Cards();
@@ -270,6 +269,8 @@ public class MenegmentXpBar : MonoBehaviour
         {
            
             currentXpBar.fillAmount = currentXp / 20;
+            
+            spawnMiniBoss.SetActive(true);
             
             if (currentXpBar.fillAmount >= 1f)
             {
@@ -291,7 +292,7 @@ public class MenegmentXpBar : MonoBehaviour
         
         else if (maxXp <= 25)
         {
-           
+            spawnMiniBoss.SetActive(false);
             currentXpBar.fillAmount = currentXp / 25;
             
             if (currentXpBar.fillAmount >= 1f)
@@ -335,7 +336,8 @@ public class MenegmentXpBar : MonoBehaviour
         
         else if (maxXp <= 35)
         {
-           
+            spawnMiniBoss.SetActive(true);
+            
             currentXpBar.fillAmount = currentXp / 35;
             
             if (currentXpBar.fillAmount >= 1f)
@@ -358,7 +360,8 @@ public class MenegmentXpBar : MonoBehaviour
         
         else if (maxXp <= 40)
         {
-           
+            spawnMiniBoss.SetActive(false);
+            
             currentXpBar.fillAmount = currentXp / 40;
             
             if (currentXpBar.fillAmount >= 1f)
@@ -379,7 +382,6 @@ public class MenegmentXpBar : MonoBehaviour
         
         else if (maxXp <= 45)
         {
-           
             currentXpBar.fillAmount = currentXp / 45;
             
             if (currentXpBar.fillAmount >= 1f)
@@ -412,6 +414,8 @@ public class MenegmentXpBar : MonoBehaviour
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
 
+                spawnBoss.SetActive(true);
+                
                 Pause();
                 Cards();
             }

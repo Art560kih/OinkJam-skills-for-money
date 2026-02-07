@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {
     public Transform target;
-    private float bulletSpeed = 25f;
+    private float bulletSpeed = 15f;
     public float damage = 2f;
     
     public Camera mainCamera;
@@ -25,12 +26,16 @@ public class Bullet : MonoBehaviour
     public Sprite toxicBall;
     public Sprite antiMateria;
     
+    public GameObject player;
+
+    private Rigidbody2D rb;
+    
     void Start()
     {
         mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         cardPlusAttackSpeed = GameObject.FindGameObjectWithTag("CardPlusDamage").GetComponent<CardPlusAttackSpeed>();
         spriteRenderer.sprite = GameObject.FindGameObjectWithTag("SpriteAntiMateria").GetComponent<SpriteRenderer>().sprite;
-        
+        rb = GetComponent<Rigidbody2D>();
         
         switch (gameObject.tag)
         {
@@ -49,41 +54,40 @@ public class Bullet : MonoBehaviour
                 spriteRenderer.sprite = antiMateria;
                 break;
         }
-        
-        Debug.Log("damage: " + damage);
 
     }
-    
-    
+
+    public float Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
+
+
     void Update()
     {
         
         if (gameObject.CompareTag("Bullet") || gameObject.CompareTag("BulletFireBall") || gameObject.CompareTag("BulletColdBall") || gameObject.CompareTag("BulletToxicBall") || gameObject.CompareTag("BulletAntiMateria"))
         {
-            StartCoroutine(moveBullet());
-            
+            MoveBullet();
         }
         
     }
     
-
-    private IEnumerator moveBullet()
+    private void MoveBullet()
     {
-        transform.position = Vector3.MoveTowards(transform.position, mousePos, bulletSpeed * Time.deltaTime);
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
+        Vector3 direction = (mousePos - player.transform.position).normalized;
+        
+        transform.Translate(direction * bulletSpeed * Time.deltaTime, Space.World);
+        
+        Vector3 viewportPos = mainCamera.WorldToViewportPoint(transform.position);
+        rb.velocity = direction * bulletSpeed;
+        if (viewportPos.x < -0.1f || viewportPos.x > 1.1f || 
+            viewportPos.y < -0.1f || viewportPos.y > 1.1f)
+        {
+            Destroy(gameObject);
+        }
     }
-
-    // private void MoveBullet()
-    // {
-    //     transform.position = Vector3.MoveTowards(transform.position, mousePos, bulletSpeed * Time.deltaTime);
-    //     Vector3 viewportPos = mainCamera.WorldToViewportPoint(transform.position);
-    //     if (viewportPos.x < -0.1f || viewportPos.x > 1.1f || 
-    //         viewportPos.y < -0.1f || viewportPos.y > 1.1f)
-    //     {
-    //         Destroy(gameObject);
-    //     }
-    // }
 }
 
 
