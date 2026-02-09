@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class PlayerLogic : MonoBehaviour
     private GameObject target;
     
     public float health = 100f;
+    public float maxHealth = 100f;
     
     private Vector2 moveInput;
     
@@ -56,6 +58,9 @@ public class PlayerLogic : MonoBehaviour
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
     public CardAntiMateria cardAntiMateria;
+    
+    public TextMeshProUGUI coinsText;
+    public int counterCoins = 0;
     
     
     private void Awake()
@@ -168,26 +173,41 @@ public class PlayerLogic : MonoBehaviour
     
     }
 
+    public int CounterCoins
+    {
+        get => counterCoins;
+        set
+        {
+            counterCoins = value;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy") || other.CompareTag("BulletMiniBoss") || other.CompareTag("BulletBoss"))
         {
             StartCoroutine(GetDamageEffect());
         }
+
+        if (other.CompareTag("Coin"))
+        {
+            counterCoins++;
+            coinsText.text = ": " + counterCoins;
+        }
     }
 
     private IEnumerator GetDamageEffect()
     {
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
-        spriteRenderer.color = Color.white;
-        
-        yield return new WaitForSeconds(0.2f);
-        
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
-        spriteRenderer.color = Color.white;
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.2f);
+            spriteRenderer.color = Color.white;
+
+            yield return new WaitForSeconds(0.2f);
+        }
     }
+
     public float TakeDamage
     {
         get => health;

@@ -47,7 +47,7 @@ public class ManegementHpBar : MonoBehaviour
                 currentHpBar.fillAmount = currentHp / 150;
                 break;
         }
-   
+    
         
     }
     

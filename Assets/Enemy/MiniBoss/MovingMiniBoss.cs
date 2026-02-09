@@ -1,45 +1,38 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingEnemy : MonoBehaviour
+public class MovingMiniBoss : MonoBehaviour
 {
-    [Header("Настройки")]
-    public float health = 30f;
-    public float moveSpeed = 3f;
-    public float damageEnemy = 10f;
-    
-    [Header("Ссылки")]
     public GameObject target;
     private Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
-    
     private Animator animator;
-    private bool isRunning = true;
-
-    private float attackRange = 1f;
-    private bool canAttack = true;
-    private float cooldown = 1f;
     
-    public bool isDead = false;
-
+    private bool isRunning = true;
+    
     private PlayerLogic playerLogic;
-
     private ManegementHpBar hpBar;
     
-    public Transform player;
-
-    private MenegmentXpBar xpBar;
-    
-    public SpriteRenderer spriteRendererXp;
-    public TMPro.TextMeshProUGUI xpbarText;
+    public float health = 100f;
+    public float moveSpeed = 3f;
+    public float damageEnemy = 5f;
     
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardToxicBall cardToxicBall;
-
+    
+    public SpriteRenderer spriteRendererXp;
+    public TMPro.TextMeshProUGUI xpbarText;
+    
+    private MenegmentXpBar xpBar;
     private bool canGetXp = true;
+    
+    public bool isDead = false;
+    
+    private float cooldown = 1f;
+    
+    
     
     void Start()
     {
@@ -62,7 +55,7 @@ public class MovingEnemy : MonoBehaviour
             rb.gravityScale = 0;
         }
     }
-    
+
     void Update()
     {
         if (health <= 0)
@@ -76,33 +69,10 @@ public class MovingEnemy : MonoBehaviour
         MoveTowardsTarget();
 
         if (target == null) return;
-
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance <= attackRange && canAttack)
-        {
-            Attack();
-        }
-        
     }
 
-    private void MoveTowardsTarget()
-    {
-        if (target == null) return;
 
-        if (!xpBar.isPaused)
-        {
-            Vector2 direction = (target.transform.position - transform.position).normalized;
-
-            transform.Translate(direction * moveSpeed * Time.deltaTime);
-
-            if (direction.x != 0 && spriteRenderer != null)
-            {
-                spriteRenderer.flipX = direction.x > 0;
-            }
-        }
-    }
-    
-    public void TakeDamage(float damageAmount)
+    private void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
         
@@ -124,6 +94,24 @@ public class MovingEnemy : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
     }
+    
+    private void MoveTowardsTarget()
+    {
+        if (target == null) return;
+
+        if (!xpBar.isPaused)
+        {
+            Vector2 direction = (target.transform.position - transform.position).normalized;
+            
+            transform.Translate(direction * moveSpeed * Time.deltaTime);
+
+            if (direction.x != 0 && spriteRenderer != null)
+            {
+                spriteRenderer.flipX = direction.x < 0;
+            }
+        }
+    }
+    
     
     private void Die()
     {
@@ -147,7 +135,7 @@ public class MovingEnemy : MonoBehaviour
 
         if (canGetXp)
         {
-            xpBar.CurrentXp += 1f;
+            xpBar.CurrentXp += 5f;
 
             canGetXp = false;
             
@@ -161,16 +149,21 @@ public class MovingEnemy : MonoBehaviour
         
     }
     
+    void CooldownXp()
+    {
+        canGetXp = true;
+    }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("ColliderForBurning") && cardFireBall.burning)
         {
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
-            StartCoroutine(cardFireBall.Burning(movingEnemy));
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
+
+            StartCoroutine(cardFireBall.BurningMiniBoss(movingMiniBoss));
             StartCoroutine(EffectBurning());
         }
-        
+
         if (collision.CompareTag("Bullet"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
@@ -184,20 +177,17 @@ public class MovingEnemy : MonoBehaviour
         if (collision.CompareTag("BulletFireBall"))
         {
             Bullet bulletFireBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
+
             if (bulletFireBall != null)
             {
-                Debug.Log("Burning");
-                
                 TakeDamage(bulletFireBall.damage);
-                
-                StartCoroutine(cardFireBall.Burning(movingEnemy));
-                
+
+                StartCoroutine(cardFireBall.BurningMiniBoss(movingMiniBoss));
+
                 StartCoroutine(EffectBurning());
-                
+
                 Destroy(collision.gameObject);
-                
             }
         }
 
@@ -207,52 +197,46 @@ public class MovingEnemy : MonoBehaviour
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
-                // Destroy(collision.gameObject);
+                Destroy(collision.gameObject);
             }
         }
 
         if (collision.CompareTag("BulletColdBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
+
             if (bulletColdBall != null)
             {
-                Debug.Log("Glaciation");
-                
                 TakeDamage(bulletColdBall.damage);
-                
-                StartCoroutine(cardColdBall.Glaciation(movingEnemy));
-                
+
+                StartCoroutine(cardColdBall.GlaciationMiniBoss(movingMiniBoss));
+
                 StartCoroutine(EffectGlaciation());
-                
+
                 Destroy(collision.gameObject);
-                
             }
         }
 
         if (collision.CompareTag("BulletToxicBall"))
         {
             Bullet bulletColdBall = collision.GetComponent<Bullet>();
-            MovingEnemy movingEnemy = GetComponent<MovingEnemy>();
-            
+            MovingMiniBoss movingMiniBoss = GetComponent<MovingMiniBoss>();
+
             if (bulletColdBall != null)
             {
-                Debug.Log("Poisoning");
-                
                 TakeDamage(bulletColdBall.damage);
-                
-                StartCoroutine(cardToxicBall.Poisoning(movingEnemy));
-                
+
+                StartCoroutine(cardToxicBall.PoisoningMiniBoss(movingMiniBoss));
+
                 StartCoroutine(EffectPoisoning());
-                
+
                 Destroy(collision.gameObject);
-                
             }
         }
-
     }
-
+    
+    
     private IEnumerator EffectPoisoning()
     {
         yield return new WaitForSeconds(1f);
@@ -292,44 +276,16 @@ public class MovingEnemy : MonoBehaviour
         }
         
     }
-
-    private void Attack()
-    {
-        if (playerLogic.health > 0)
-        {
-            playerLogic.TakeDamage -= damageEnemy;
-            
-            hpBar.CurrentHp -= damageEnemy;
-            
-            Debug.Log(playerLogic.health);
-            canAttack = false;
-            Invoke(nameof(CooldownAttack), cooldown);
-        }
-        else
-        {
-            playerLogic.isDead = true;
-        }
-    }
-
-    void CooldownAttack()
-    {
-        canAttack = true;
-    }
-
-    void CooldownXp()
-    {
-        canGetXp = true;
-    }
-
+    
     private IEnumerator CounterXp()
     {
         spriteRendererXp.enabled = true;
+        xpbarText.text = "+5";
         xpbarText.enabled = true;
         yield return new WaitForSeconds(0.5f);
         
         spriteRendererXp.enabled = false;
+        xpbarText.text = "+1";
         xpbarText.enabled = false;
     }
-
-  
 }

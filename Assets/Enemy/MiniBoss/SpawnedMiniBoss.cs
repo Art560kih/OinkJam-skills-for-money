@@ -1,35 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class BossSpawned : MonoBehaviour
+public class SpawnedMiniBoss : MonoBehaviour
 {
-    [SerializeField] private GameObject bossPrefab;
-    [SerializeField]private Transform[] bossSpawnPoint;
-    [SerializeField] private int maxBoss = 2;
-    private float spawnInterval = 1f;
+    [SerializeField] private GameObject miniBossPrefab;
+    [SerializeField]private Transform[] miniBossSpawnPoint;
+    public int maxMiniBoss = 2;
+    protected float spawnInterval = 1f;
     
-    private List<GameObject> Boss = new List<GameObject>();
-    
+    private List<GameObject> miniBoss = new List<GameObject>();
+
     private MenegmentXpBar xpBar;
 
     private void Start()
     {
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
         
-        if (bossSpawnPoint.Length == 0)
+        if (miniBossSpawnPoint.Length == 0)
         {
             Debug.LogError("No spawn points assigned!");
         }
-    
     }
 
     void Update()
     {
-        if (Boss.Count < maxBoss)
+        if (miniBoss.Count < maxMiniBoss)
         {
             StartCoroutine(SpawnEnemiesRoutine());
-            Debug.Log("Boss spawned" + Boss.Count);
         }
     }
 
@@ -38,14 +38,11 @@ public class BossSpawned : MonoBehaviour
     {
         if (!xpBar.isPaused)
         {
-            while (true)
+            while (miniBoss.Count < maxMiniBoss)
             {
-                if (Boss.Count < maxBoss)
-                {
-                    SpawnEnemy();
-                }
-
-                Boss.RemoveAll(enemy => enemy == null);
+                SpawnEnemy();
+                
+                miniBoss.RemoveAll(enemy => enemy == null);
 
                 yield return new WaitForSeconds(spawnInterval);
             }
@@ -56,14 +53,15 @@ public class BossSpawned : MonoBehaviour
     {
         if (!xpBar.isPaused)
         {
-            Transform spawnPoint = bossSpawnPoint[0];
+            int randomIndex = Random.Range(0, miniBossSpawnPoint.Length);
+            Transform spawnPoint = miniBossSpawnPoint[randomIndex];
 
-            GameObject enemy = Instantiate(bossPrefab, spawnPoint.position, Quaternion.identity);
+            GameObject enemy = Instantiate(miniBossPrefab, spawnPoint.position, Quaternion.identity);
 
-            enemy.tag = "Boss";
-            enemy.name = "Boss";
+            enemy.tag = "MiniBoss";
+            enemy.name = "MiniBoss";
             
-            Boss.Add(enemy);
+            miniBoss.Add(enemy);
 
             ActivateClone(enemy);
         }
@@ -76,13 +74,13 @@ public class BossSpawned : MonoBehaviour
         clone.SetActive(true);
 
 
-        BossSpawned[] spawnedBoss = clone.GetComponents<BossSpawned>();
-        foreach (BossSpawned script in spawnedBoss)
+        SpawnedMiniBoss[] spawnedMiniBoss = clone.GetComponents<SpawnedMiniBoss>();
+        foreach (SpawnedMiniBoss script in spawnedMiniBoss)
         {
             script.enabled = true;
         }
         
-        MovingBoss scriptMove = clone.GetComponent<MovingBoss>();
+        MovingMiniBoss scriptMove = clone.GetComponent<MovingMiniBoss>();
         if (scriptMove != null)
         {
             scriptMove.enabled = true;

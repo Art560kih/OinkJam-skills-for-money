@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Content;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MovingBoss : MonoBehaviour
 {
@@ -44,6 +46,13 @@ public class MovingBoss : MonoBehaviour
     private float teleportTimer;
 
     [SerializeField] private SpriteRenderer shadow;
+
+    private GameObject puddlePrefab;
+    
+    private HpBarBoss hpBarBoss;
+
+    public GameObject coin;
+    public GameObject panelEnd;
     
     
     void Start()
@@ -52,10 +61,13 @@ public class MovingBoss : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         
+        puddlePrefab = GameObject.FindGameObjectWithTag("Puddle");
+        
         playerLogic = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLogic>();
         
         hpBar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
+        hpBarBoss = GameObject.FindGameObjectWithTag("HpBarBoss").GetComponent<HpBarBoss>();
         
         teleportTimer = 0.1f;
         
@@ -82,10 +94,17 @@ public class MovingBoss : MonoBehaviour
                     isRunning = false;
                     Time.timeScale = 0;
                     panelWinning.SetActive(true);
+                    
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        panelWinning.SetActive(false);
+                        panelEnd.SetActive(true);
+                        coin.SetActive(false);
+                    }
                     return;
                 }
 
-                animator.SetBool("isRunning", isRunning);
+                animator.SetBool("IsRunning", isRunning);
                 MoveTowardsTarget();
 
                 teleportTimer -= Time.deltaTime;
@@ -109,19 +128,24 @@ public class MovingBoss : MonoBehaviour
         {
             StartCoroutine(EffectTeleportation());
 
-            StartCoroutine(Telep());
+            isRunning = false;
+            
+            StartCoroutine(Teleport());
         }
     }
 
-    private IEnumerator Telep()
+    private IEnumerator Teleport()
     {
         yield return new WaitForSeconds(teleportCooldown);
+
+        Vector2 earlyPosition = transform.position;
         
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         float randomDistance = Random.Range(minTeleportDistance, maxTeleportDistance);
         Vector2 newPosition = (Vector2)transform.position + randomDirection * randomDistance;
 
         health += 30f;
+        if(hpBarBoss != null) hpBarBoss.CurrentHp += 30f;
             
         if (areaCenter != null)
         {
@@ -129,12 +153,18 @@ public class MovingBoss : MonoBehaviour
         }
             
         transform.position = newPosition;
+        
+        GameObject clonePuddle = Instantiate(puddlePrefab, earlyPosition, Quaternion.identity);
+        
+        clonePuddle.tag = "Puddle";
+        clonePuddle.name = "Puddle";
     }
 
 
     private void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
+        if(hpBarBoss != null) hpBarBoss.CurrentHp -= damageAmount;
         
         StartCoroutine(DamageEffect());
         
@@ -155,9 +185,7 @@ public class MovingBoss : MonoBehaviour
             shadow.color = Color.blue;
             yield return new WaitForSeconds(0.1f);
             shadow.color = new Color(0.7f, 0.7f, 0.7f, 0.1f);
-
-        
-        
+            
             yield return new WaitForSeconds(1f);
         }
     }
@@ -244,8 +272,6 @@ public class MovingBoss : MonoBehaviour
 
             if (bulletFireBall != null)
             {
-                Debug.Log("Burning");
-
                 TakeDamage(bulletFireBall.damage);
 
                 StartCoroutine(cardFireBall.BurningBoss(movingBoss));
@@ -253,7 +279,6 @@ public class MovingBoss : MonoBehaviour
                 StartCoroutine(EffectBurning());
 
                 Destroy(collision.gameObject);
-
             }
         }
 
@@ -274,8 +299,6 @@ public class MovingBoss : MonoBehaviour
 
             if (bulletColdBall != null)
             {
-                Debug.Log("Glaciation");
-
                 TakeDamage(bulletColdBall.damage);
 
                 StartCoroutine(cardColdBall.GlaciationBoss(movingBoss));
@@ -283,7 +306,6 @@ public class MovingBoss : MonoBehaviour
                 StartCoroutine(EffectGlaciation());
 
                 Destroy(collision.gameObject);
-
             }
         }
 
@@ -294,8 +316,6 @@ public class MovingBoss : MonoBehaviour
 
             if (bulletColdBall != null)
             {
-                Debug.Log("Poisoning");
-
                 TakeDamage(bulletColdBall.damage);
 
                 StartCoroutine(cardToxicBall.PoisoningBoss(movingBoss));

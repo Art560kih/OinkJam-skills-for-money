@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardToxicBall : MonoBehaviour
 {
@@ -13,14 +15,32 @@ public class CardToxicBall : MonoBehaviour
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
     public CardAntiMateria cardAntiMateria;
+    public CardPlusAttackSpeed cardPlusAttackSpeed;
+    public CardPlusHp cardPlusHp;
+    
+    public int price = 40;
+    
+    private PlayerLogic _playerLogic;
+
+    void Start()
+    {
+        _playerLogic = GameObject.FindWithTag("Player").GetComponent<PlayerLogic>();
+    }
 
     public void ChouceToxicBall()
     {
-        Chouce = true;
-        
-        cardFireBall.Chouce = false;
-        cardColdBall.Chouce = false;
-        cardAntiMateria.Chouce = false;
+        if (price <= _playerLogic.counterCoins)
+        {
+            Chouce = true;
+
+            cardPlusHp.Chouce = false;
+            cardPlusAttackSpeed.Chouce = false;
+            
+            cardFireBall.Chouce = false;
+            cardColdBall.Chouce = false;
+            cardAntiMateria.Chouce = false;
+        }  
+        else Chouce = false;
     }
     
     public bool Chouce

@@ -36,6 +36,10 @@ TagManager:
   - BossOrig
   - Boss
   - BulletBoss
+  - SpawnBoss
+  - Coin
+  - Puddle
+  - HpBarBoss
   layers:
   - Default
   - TransparentFX
