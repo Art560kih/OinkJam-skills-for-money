@@ -1,7 +1,6 @@
-using System;
+
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,9 +19,16 @@ public class CardColdBall : MonoBehaviour
     
     private PlayerLogic _playerLogic;
     
+    public Button button;
+    public Image buttonImage;
+
+    private Color darkColor;
+    
     void Start()
     {
         _playerLogic = GameObject.FindWithTag("Player").GetComponent<PlayerLogic>();
+        
+        darkColor = new Color(0.5f, 0.5f, 0.5f, 1f);
     }
     
     public void ChouceColdBall()
@@ -30,7 +36,9 @@ public class CardColdBall : MonoBehaviour
         if (price <= _playerLogic.counterCoins)
         {
             Chouce = true;
-
+            button.enabled = true;
+            buttonImage.color = Color.cyan;
+            
             cardPlusHp.Chouce = false;
             cardPlusAttackSpeed.Chouce = false;
             
@@ -39,7 +47,12 @@ public class CardColdBall : MonoBehaviour
             cardAntiMateria.Chouce = false;
         }
         
-        else Chouce = false;
+        else
+        {
+            Chouce = false;
+            button.enabled = false;
+            buttonImage.color = darkColor;
+        }
        
     }
 

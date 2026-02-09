@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
+
 
 public class Bullet : MonoBehaviour
 {
@@ -25,6 +22,7 @@ public class Bullet : MonoBehaviour
     public Sprite coldBall;
     public Sprite toxicBall;
     public Sprite antiMateria;
+    public Sprite bullet;
     
     public GameObject player;
 
@@ -39,7 +37,8 @@ public class Bullet : MonoBehaviour
         
         switch (gameObject.tag)
         {
-            case "Bullet":
+            case "BulletOrig":
+                spriteRenderer.sprite = bullet;
                 break;
             case "BulletFireBall":
                 spriteRenderer.sprite = fireBall;
@@ -67,7 +66,7 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         
-        if (gameObject.CompareTag("Bullet") || gameObject.CompareTag("BulletFireBall") || gameObject.CompareTag("BulletColdBall") || gameObject.CompareTag("BulletToxicBall") || gameObject.CompareTag("BulletAntiMateria"))
+        if (gameObject.CompareTag("BulletOrig") || gameObject.CompareTag("BulletFireBall") || gameObject.CompareTag("BulletColdBall") || gameObject.CompareTag("BulletToxicBall") || gameObject.CompareTag("BulletAntiMateria"))
         {
             MoveBullet();
         }

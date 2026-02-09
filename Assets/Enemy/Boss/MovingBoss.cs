@@ -1,8 +1,7 @@
+
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class MovingBoss : MonoBehaviour
 {
@@ -14,13 +13,11 @@ public class MovingBoss : MonoBehaviour
     private bool isRunning = true;
     
     private PlayerLogic playerLogic;
-    private ManegementHpBar hpBar;
     
     public float health = 500f;
     public float maxHealth = 500f;
     
     public float moveSpeed = 1f;
-    public float damageEnemy = 5f;
     
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
@@ -48,11 +45,14 @@ public class MovingBoss : MonoBehaviour
     [SerializeField] private SpriteRenderer shadow;
 
     private GameObject puddlePrefab;
-    
-    private HpBarBoss hpBarBoss;
 
     public GameObject coin;
     public GameObject panelEnd;
+    
+    public HpBarBoss hpBarBoss;
+    
+    public AudioClip _audioClipHit;
+    public AudioSource _audioSourceHit;
     
     
     void Start()
@@ -64,10 +64,8 @@ public class MovingBoss : MonoBehaviour
         puddlePrefab = GameObject.FindGameObjectWithTag("Puddle");
         
         playerLogic = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLogic>();
-        
-        hpBar = GameObject.FindGameObjectWithTag("Slider").GetComponent<ManegementHpBar>();
+ 
         xpBar = GameObject.FindGameObjectWithTag("XpBar").GetComponent<MenegmentXpBar>();
-        hpBarBoss = GameObject.FindGameObjectWithTag("HpBarBoss").GetComponent<HpBarBoss>();
         
         teleportTimer = 0.1f;
         
@@ -255,12 +253,15 @@ public class MovingBoss : MonoBehaviour
             StartCoroutine(EffectBurning());
         }
 
-        if (collision.CompareTag("Bullet"))
+        if (collision.CompareTag("BulletOrig"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 Destroy(collision.gameObject);
             }
         }
@@ -273,6 +274,13 @@ public class MovingBoss : MonoBehaviour
             if (bulletFireBall != null)
             {
                 TakeDamage(bulletFireBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+
+                for (int i = 0; i < 3; i++)
+                {
+                    hpBarBoss.CurrentHp -= cardFireBall.periodicDamage;
+                }
 
                 StartCoroutine(cardFireBall.BurningBoss(movingBoss));
 
@@ -288,6 +296,9 @@ public class MovingBoss : MonoBehaviour
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 Destroy(collision.gameObject);
             }
         }
@@ -300,6 +311,8 @@ public class MovingBoss : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
 
                 StartCoroutine(cardColdBall.GlaciationBoss(movingBoss));
 
@@ -317,6 +330,13 @@ public class MovingBoss : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    hpBarBoss.CurrentHp -= cardToxicBall.periodicDamage;
+                }
 
                 StartCoroutine(cardToxicBall.PoisoningBoss(movingBoss));
 

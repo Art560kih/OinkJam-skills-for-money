@@ -1,12 +1,11 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 public class PlayerLogic : MonoBehaviour
 {
@@ -52,7 +51,7 @@ public class PlayerLogic : MonoBehaviour
     
     private MenegmentXpBar xpBar;
 
-    public string taged = "Bullet";
+    public string taged = "BulletOrig";
     
     public CardFireBall cardFireBall;
     public CardColdBall cardColdBall;
@@ -61,6 +60,12 @@ public class PlayerLogic : MonoBehaviour
     
     public TextMeshProUGUI coinsText;
     public int counterCoins = 0;
+    
+    public AudioClip _audioClip;
+    public AudioSource _audioSource;
+    
+    public AudioClip _audioClipHit;
+    public AudioSource _audioSourceHit;
     
     
     private void Awake()
@@ -110,6 +115,7 @@ public class PlayerLogic : MonoBehaviour
                     if (Time.time >= nextSpawnTime)
                     {
                         Move();
+                        _audioSource.PlayOneShot(_audioClip);
                         nextSpawnTime = Time.time + (1f / spawnRate);
                     }
                 }
@@ -186,6 +192,7 @@ public class PlayerLogic : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("BulletMiniBoss") || other.CompareTag("BulletBoss"))
         {
+            _audioSourceHit.PlayOneShot(_audioClipHit);
             StartCoroutine(GetDamageEffect());
         }
 

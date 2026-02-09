@@ -1,11 +1,13 @@
-using System;
+
 using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
+    public AudioSource _audioSource;
+    public AudioClip _audioClip;
     
     private void Start()
     {
@@ -35,6 +37,7 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            _audioSource.PlayOneShot(_audioClip);
             Destroy(gameObject);
         }
     }

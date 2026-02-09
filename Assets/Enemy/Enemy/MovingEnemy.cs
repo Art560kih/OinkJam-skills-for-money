@@ -1,8 +1,9 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MovingEnemy : MonoBehaviour
 {
@@ -46,6 +47,11 @@ public class MovingEnemy : MonoBehaviour
     private List<GameObject> coins = new List<GameObject>();
     private int maxCoins = 5, minCoins = 1;
     
+    public UnityEvent onDeath; 
+    
+    public AudioClip _audioClipHit;
+    public AudioSource _audioSourceHit;
+    
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -61,7 +67,8 @@ public class MovingEnemy : MonoBehaviour
         {
             target = GameObject.FindGameObjectWithTag("Player");
         }
-
+        
+        
         if (rb != null)
         {
             rb.gravityScale = 0;
@@ -90,6 +97,7 @@ public class MovingEnemy : MonoBehaviour
         
     }
 
+    
 
     private void SpawnCoin()
     {
@@ -218,11 +226,12 @@ public class MovingEnemy : MonoBehaviour
             StartCoroutine(EffectBurning());
         }
         
-        if (collision.CompareTag("Bullet"))
+        if (collision.CompareTag("BulletOrig"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
             if (bullet != null)
             {
+                _audioSourceHit.PlayOneShot(_audioClipHit);
                 TakeDamage(bullet.damage);
                 Destroy(collision.gameObject);
             }
@@ -237,6 +246,8 @@ public class MovingEnemy : MonoBehaviour
             {
                 TakeDamage(bulletFireBall.damage);
                 
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 StartCoroutine(cardFireBall.Burning(movingEnemy));
                 
                 StartCoroutine(EffectBurning());
@@ -250,6 +261,8 @@ public class MovingEnemy : MonoBehaviour
             Bullet bullet = collision.GetComponent<Bullet>();
             if (bullet != null)
             {
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 TakeDamage(bullet.damage);
             }
         }
@@ -262,6 +275,8 @@ public class MovingEnemy : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
                 
                 StartCoroutine(cardColdBall.Glaciation(movingEnemy));
                 
@@ -279,6 +294,8 @@ public class MovingEnemy : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
                 
                 StartCoroutine(cardToxicBall.Poisoning(movingEnemy));
                 

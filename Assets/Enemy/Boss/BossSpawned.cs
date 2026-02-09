@@ -39,7 +39,8 @@ public class BossSpawned : MonoBehaviour
 
     public IEnumerator SpawnEnemiesRoutine()
     {
-    
+
+        
         if (!xpBar.isPaused)
         {
             while (true)

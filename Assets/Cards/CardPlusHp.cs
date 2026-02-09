@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,9 +17,16 @@ public class CardPlusHp : MonoBehaviour
     
     private PlayerLogic _playerLogic;
 
+    public Button button;
+    public Image buttonImage;
+
+    private Color darkColor;
+
     void Start()
     {
         _playerLogic = GameObject.FindWithTag("Player").GetComponent<PlayerLogic>();
+        
+        darkColor = new Color(0.5f, 0.5f, 0.5f, 1f);
     }
     
     public bool Chouce
@@ -32,9 +37,11 @@ public class CardPlusHp : MonoBehaviour
     
     public void PlusHp()
     {
-        if (price > _playerLogic.counterCoins)
+        if (price <= _playerLogic.counterCoins)
         {
             Chouce = true;
+            button.enabled = true;
+            buttonImage.color = Color.cyan;
             
             cardPlusAttackSpeed.Chouce = false;
             cardToxicBall.Chouce = false;
@@ -42,7 +49,13 @@ public class CardPlusHp : MonoBehaviour
             cardAntiMateria.Chouce = false;
             cardFireBall.Chouce = false;
         }
-        else Chouce = false;
+        else
+        {
+            Chouce = false;
+            button.enabled = false;
+            buttonImage.color = darkColor;
+        }
+  
     }
     
 }

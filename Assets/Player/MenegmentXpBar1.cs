@@ -1,14 +1,13 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+
 using Random = System.Random;
 
 public class MenegmentXpBar : MonoBehaviour
 {
-    public Slider currentSlider;
     public Image currentXpBar;
     public PlayerLogic _player;
     
@@ -57,6 +56,14 @@ public class MenegmentXpBar : MonoBehaviour
 
     public Button buttonPick;
     
+    public AudioClip _audioClipLevelUp;
+    public AudioSource _audioSourceLevelUp;
+    
+    public AudioClip _audioClipButton;
+    public AudioSource _audioSourceButton;
+
+    public MovingEnemy _movingEnemy;
+    
     private void Cards() 
     {
         
@@ -104,6 +111,7 @@ public class MenegmentXpBar : MonoBehaviour
     {
         isPaused = false;
         choucePanel.SetActive(false);
+        _audioSourceButton.PlayOneShot(_audioClipButton);
         
         
         Destroy(cloneFirstCard);
@@ -217,6 +225,8 @@ public class MenegmentXpBar : MonoBehaviour
         isPaused = true;
         choucePanel.SetActive(true);
         
+        _audioSourceLevelUp.PlayOneShot(_audioClipLevelUp);
+        
         cardFireBall.isFireBall = false;
         cardColdBall.isColdBall = false;
         cardToxicBall.isToxicball = false;
@@ -302,6 +312,8 @@ public class MenegmentXpBar : MonoBehaviour
                 
                 currentXp = 0f;
                 maxXp += 5;
+                _movingEnemy.moveSpeed += 0.5f; 
+                
                 
                 nextLvl++;
                 lvl.text = $"{nextLvl}";
@@ -364,6 +376,7 @@ public class MenegmentXpBar : MonoBehaviour
             if (currentXpBar.fillAmount >= 1f)
             {
                 currentXpBar.fillAmount = 0f;
+                _movingEnemy.moveSpeed += 0.5f; 
                 
                 currentXp = 0f;
                 maxXp += 5;

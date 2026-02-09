@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovingMiniBoss : MonoBehaviour
@@ -32,7 +31,8 @@ public class MovingMiniBoss : MonoBehaviour
     
     private float cooldown = 1f;
     
-    
+    public AudioClip _audioClipHit;
+    public AudioSource _audioSourceHit;
     
     void Start()
     {
@@ -144,6 +144,7 @@ public class MovingMiniBoss : MonoBehaviour
 
         StartCoroutine(CounterXp());
         
+        
         Destroy(gameObject, 1f);
 
         
@@ -164,12 +165,15 @@ public class MovingMiniBoss : MonoBehaviour
             StartCoroutine(EffectBurning());
         }
 
-        if (collision.CompareTag("Bullet"))
+        if (collision.CompareTag("BulletOrig"))
         {
             Bullet bullet = collision.GetComponent<Bullet>();
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 Destroy(collision.gameObject);
             }
         }
@@ -182,6 +186,8 @@ public class MovingMiniBoss : MonoBehaviour
             if (bulletFireBall != null)
             {
                 TakeDamage(bulletFireBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
 
                 StartCoroutine(cardFireBall.BurningMiniBoss(movingMiniBoss));
 
@@ -197,6 +203,9 @@ public class MovingMiniBoss : MonoBehaviour
             if (bullet != null)
             {
                 TakeDamage(bullet.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
+                
                 Destroy(collision.gameObject);
             }
         }
@@ -209,6 +218,8 @@ public class MovingMiniBoss : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
 
                 StartCoroutine(cardColdBall.GlaciationMiniBoss(movingMiniBoss));
 
@@ -226,6 +237,8 @@ public class MovingMiniBoss : MonoBehaviour
             if (bulletColdBall != null)
             {
                 TakeDamage(bulletColdBall.damage);
+                
+                _audioSourceHit.PlayOneShot(_audioClipHit);
 
                 StartCoroutine(cardToxicBall.PoisoningMiniBoss(movingMiniBoss));
 
@@ -283,7 +296,11 @@ public class MovingMiniBoss : MonoBehaviour
         xpbarText.text = "+5";
         xpbarText.enabled = true;
         yield return new WaitForSeconds(0.5f);
-        
+        EndCounterXp();
+    }
+
+    private void EndCounterXp()
+    {
         spriteRendererXp.enabled = false;
         xpbarText.text = "+1";
         xpbarText.enabled = false;

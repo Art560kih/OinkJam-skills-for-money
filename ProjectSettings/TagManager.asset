@@ -40,6 +40,8 @@ TagManager:
   - Coin
   - Puddle
   - HpBarBoss
+  - BulletOrig
+  - SpriteBulletOrig
   layers:
   - Default
   - TransparentFX
